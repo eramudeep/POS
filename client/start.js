@@ -2,6 +2,11 @@ const setupEvents = require('./installers/setupEvents')
  if (setupEvents.handleSquirrelEvent()) {
     return;
  }
+
+ const electron = require('electron')
+
+// Enable live reload for all the files inside your project directory
+require('electron-reload')(__dirname);
  
 //const server = require('./server');
 const {app, BrowserWindow, ipcMain} = require('electron');
