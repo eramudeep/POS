@@ -3,7 +3,7 @@ const setupEvents = require('./installers/setupEvents')
     return;
  }
  
-const server = require('./server');
+//const server = require('./server');
 const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path')
 
