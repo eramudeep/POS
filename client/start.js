@@ -5,13 +5,17 @@ const setupEvents = require('./installers/setupEvents')
 
  const electron = require('electron')
 
-// Enable live reload for all the files inside your project directory
-require('electron-reload')(__dirname);
  
-//const server = require('./server');
-const {app, BrowserWindow, ipcMain} = require('electron');
-const path = require('path')
-
+ //const server = require('./server');
+ const {app, BrowserWindow, ipcMain} = require('electron');
+ const path = require('path')
+ 
+ // Enable live reload for all the files inside your project directory
+ //require('electron-reload')(__dirname);
+ require('electron-reload')(__dirname, {
+   electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+ });
+ 
 const contextMenu = require('electron-context-menu');
 
 let mainWindow
