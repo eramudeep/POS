@@ -15,10 +15,15 @@
     <link href="assets/css/pages.css" rel="stylesheet" type="text/css" />
     
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
     <script> 
         $(function(){
-            console.log("IN LOAD FUNCTION  !!")
           $("#header").load("./components/header/header.html"); 
+        });
+
+        $(function(){
+            console.log("TEST TRANSACTIONS _ VIEW")
+          $("#transactions-view").load("./components/transactions-view/transactions-view.html"); 
         });
     </script> 
 
@@ -32,112 +37,8 @@
   <div class="container">
     <div  id="header"></div>
     <br>
-
-    <div id="transactions_view">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card-box"> 
-                    <div class="row">               
-                        <h3 class="col-md-2">Transactions</h3> 
-                        <div class="col-md-1">
-                            <span>Till</span>
-                            <select id="tills" class="form-control">                              
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <span>Cashier</span>
-                            <select id="users" class="form-control">
-                            </select>
-                        </div>
-                        <div class="col-md-1">
-                            <span>Status</span>
-                            <select id="status" class="form-control status">
-                                <option value="1">Paid</option>
-                                <option value="0">Unpaid</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <span style="width: 100%;">Date</span>
-                            <div id="reportrange">
-                                <i class="fa fa-calendar"></i>&nbsp;
-                                <span></span> <i class="fa fa-caret-down"></i>
-                            </div>
-                        </div>
-                    </div>   
-                        <hr>
-                        <div class="row">
-                           
-
-                            <div class="col-md-5">
-                                <div class="row">
-                                    <div class="col-md-8" id="productSales">
-                                            <h4>Products</h4>
-                                            <hr>
-                                            <table class="table tablesaw-enhanced" id="productsSold">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Sold</th>
-                                                        <th>Available</th> 
-                                                        <th>Sales</th>                                                                                                           
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="product_sales"></tbody>
-                                            </table>
-                                    </div>
-                                    <div class="col-md-4" id="totals">
-                                            <h4>Total</h4>
-                                            <hr>
-                                    
-                                            <div id="total_sales" class="btn-success">
-                                                <h5>SALES</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                       
-                                            <div id="total_transactions" class="btn-warning">
-                                                <h5>TRANSACTIONS</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                
-                                            <div id="total_items" class="btn-info">
-                                                <h5>ITEMS</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-
-                                            <div id="total_products" class="btn-default">
-                                                <h5>PRODUCTS</h5>
-                                                <div id="counter">0</div>
-                                            </div>
-                                                                         
-                                    </div>
-                                   
-                               </div>
-                           </div>
-
-                           <div class="col-md-7">
-                            <table class="table tablesaw-enhanced" id="transactionList">
-                                <thead>
-                                    <tr>                                                                      
-                                        <th>Invoice</th>                                      
-                                        <th>Date</th>
-                                        <th>Total</th>
-                                        <th>Paid</th>
-                                        <th>Change</th>
-                                        <th>Method</th>
-                                        <th>Till</th>
-                                        <th>Cashier</th>
-                                        <th>View</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transaction_list"></tbody>
-                            </table>
-                        </div>
-
-                      </div>                    
-                </div>
-            </div>
-        </div>
-   </div>
+    <div  id="transactions-view"></div>
+    
 
 
    <div id="pos_view">
