@@ -1,0 +1,110 @@
+<script>
+    require('../../../renderer.js');
+</script>
+
+<div id="pos_view">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card-box" id="card-box">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <select name="" id="customer" class="form-control">
+                        </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button data-toggle="modal" data-target="#newCustomer" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group m-t-5">
+                        <form action="" id="searchBarCode">
+                            <input type="text" required id="skuCode" name="skuCode" class="form-control" placeholder="Scan barcode or type the number then hit enter" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <input type="submit" style="display:none;">
+                        </form>
+                        <span class="input-group-addon" id="basic-addon2">
+                            <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <table class="table m-0" id="cartTable">
+
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th width="150px">Item</th>
+                            <th width="170px">Qty</th>
+                            <th>Price</th>
+                            <th width="5px">
+                                <button onclick="$(this).cancelOrder()" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+                <hr>
+               <div class="m-t-5">
+                   <div class="row">
+                       <div class="col-md-3">Total Item(s)</div>
+                       <div class="col-md-3">: <sapn id="total">0</sapn></div>
+                       <div class="col-md-3">Price :</div>
+                       <div class="col-md-3">: <span id="price">0.0</span></div>
+                   </div>
+                   <div class="row">
+                       <div class="col-md-3">Discount</div>
+                       <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount" oninput="$(this).calculateCart();"></div>
+                       <div class="col-md-3">Gross Price (inc <span id="taxInfo"></span>% Tax)</div>
+                       <div class="col-md-3"><h3 id="gross_price">0.00</h3></div>
+                   </div>
+
+               </div>
+
+                <div class="button-list pull-right">
+
+                  <button onclick="$(this).submitDueOrder(3);" type="button" class="btn btn-info waves-effect waves-light">
+                      <i class="fa fa-print"></i> 
+                  </button>
+
+                    <button  onclick="$(this).cancelOrder()" type="button" class="btn btn-danger waves-effect waves-light">
+                        <span class="btn-label"><i class="fa fa-ban"></i></span>Cancel
+                    </button>
+
+                    <button type="button" id="hold" class="btn btn-default waves-effect waves-light">
+                        <span class="btn-label"><i class="fa fa-hand-paper-o"></i></span>Hold
+                    </button>
+
+                    <button type="button" id="payButton" class="btn btn-success waves-effect waves-light">
+                        <span class="btn-label"><i class="fa fa-money"></i></span>Pay
+                    </button>
+                </div>
+                <hr>
+
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card-box">
+                <div class="row">
+                    <div class="col-md-4">
+                        <input type="text" id="search" class="form-control" placeholder="Search product by name or sku">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="" id="categories">
+                            
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row" id="parent"> 
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
