@@ -23,12 +23,16 @@
     function printDiv(divName) {
      var printContents = document.getElementById(divName).innerHTML;
      var originalContents = document.body.innerHTML;
-
      document.body.innerHTML = printContents;
-
+     
      window.print();
-
+     
      document.body.innerHTML = originalContents;
-     //$("#orderModal")
+     //document.getElementById("#orderModal").dataDismiss = "modal";
+     //document.getElementById("#orderModal").ariaHidden = "true";
+     //$("#orderModal").hide();
+     window.location.reload();
+     //$(".modal").ariaHidden = "true";
+     
 }
 </script>
