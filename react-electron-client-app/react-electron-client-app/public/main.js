@@ -8,18 +8,24 @@ require('@electron/remote/main').initialize();
 function createWindow() {
     // Create the browser window.
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1500,
+        height: 1200,
+        frame: false,
+        minWidth: 1200,
+        minHeight: 750,
         webPreferences: {
             nodeIntegration: true, // Better not to enable it
             enableRemoteModule: true
         }
     });
 
+    win.maximize();
+    win.show();
+
     win.loadURL(
-        isDev 
-        ? 'http://localhost:3000/'
-        : `file://${path.join(__dirname, '../build/index.html')}`
+        isDev
+            ? 'http://localhost:3000/'
+            : `file://${path.join(__dirname, '../build/index.html')}`
     );
 }
 
@@ -27,7 +33,7 @@ app.on('ready', createWindow);
 
 // For MAC OS :
 
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with cmd + Q
     if (process.platform !== 'darwin') {
@@ -35,8 +41,8 @@ app.on('window-all-closed', function() {
     }
 });
 
-app.on('activate', function() {
+app.on('activate', function () {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
