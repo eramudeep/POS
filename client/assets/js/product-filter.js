@@ -36,6 +36,7 @@ $(document).ready(function(){
 
 
     function searchOpenOrders() {
+        console.log("in searchOpenOrders")
         var matcher = new RegExp($("#holdOrderInput").val(), 'gi');
         $('.order').show().not(function(){
             return matcher.test($(this).find('.ref_number').text())

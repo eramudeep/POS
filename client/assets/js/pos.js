@@ -867,6 +867,7 @@ if (auth == undefined) {
 
         $.get(api + 'on-hold', function (data) {
             holdOrderList = data;
+            console.log(data)
             holdOrderlocation.empty();
             clearInterval(dotInterval);
             $(this).randerHoldOrders(holdOrderList, holdOrderlocation, 1);
@@ -884,6 +885,7 @@ if (auth == undefined) {
 
 
         $.fn.randerHoldOrders = function (data, renderLocation, orderType) {
+            console.log("in RanderHoldOrders");
             $.each(data, function (index, order) {
                 $(this).calculatePrice(order);
                 renderLocation.append(
@@ -915,6 +917,7 @@ if (auth == undefined) {
                     )
                 )
             })
+            console.log("fin randerHoldOrders")
         }
 
 
