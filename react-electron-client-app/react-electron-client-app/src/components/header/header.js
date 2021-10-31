@@ -1,4 +1,10 @@
 import React from 'react';
+// import '../../assets/css/bootstrap.min.css';
+// import '../../assets/css/components.css';
+// import '../../assets/css/core.css';
+// import '../../assets/css/icons.css';
+// import '../../assets/css/pages.css';
+// import '../../assets/css/responsive.css';
 
 export class Header extends React.Component {
     render() {
@@ -11,7 +17,7 @@ export class Header extends React.Component {
                         <div className="btn-group p_one">
                             <button id="productModal" data-toggle="modal" data-target="#Products" type="button"
                                 className="btn btn-default waves-effect waves-light">
-                                <span className="btn-label"><i className=" 	glyphicon glyphicon-barcode"></i> </span> Products
+                                <span className="btn-label"><i className="glyphicon glyphicon-barcode"></i> </span> Products
                             </button>
                             <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button"
                                 className="btn btn-warning waves-effect waves-light">
@@ -41,7 +47,7 @@ export class Header extends React.Component {
                         </button>
                     </div>
 
-                    <img className="loading m-t-5" style={{ marginLeft: "35%" }} height="50px" src="../../public/assets/images/loading.gif" alt=""></img>
+                    {/*<img className="loading m-t-5" style={{ marginLeft: "35%" }} height="50px" src="../../assets/images/loading.gif" alt=""></img>*/}
 
                     <div className="button-list pull-right m-t-15 m-l-10">
 
