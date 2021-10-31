@@ -249,7 +249,7 @@ if (auth == undefined) {
             $.get(api + 'categories/all', function (data) {
                 allCategories = data;
                 loadCategoryList();
-                $('#category').html(`<option value="0">Select</option>`);
+                $('#category').html(`<option value="0">Sélectionner</option>`);
                 allCategories.forEach(category => {
                     $('#category').append(`<option value="${category._id}">${category.name}</option>`);
                 });
@@ -1511,7 +1511,7 @@ if (auth == undefined) {
 
                 product_list += `<tr>
             <td><img id="`+ product._id + `"></td>
-            <td><img style="max-height: 50px; max-width: 50px; border: 1px solid #ddd;" src="${product.img == "" ? "./assets/images/default.jpg" : img_path + product.img}" id="product_img"></td>
+            <td><img style="max-height: 500px; max-width: 50px; border: 1px solid #ddd;" src="${product.img == "" ? "./assets/images/default.jpg" : img_path + product.img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>
