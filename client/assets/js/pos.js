@@ -3,6 +3,7 @@ let index = 0;
 let allUsers = [];
 let allProducts = [];
 let allCategories = [];
+let allFamilies = []; // Added by Ryan Hardie
 let allTransactions = [];
 let sold = [];
 let state = [];
@@ -40,6 +41,7 @@ let html2canvas = require('html2canvas');
 let JsBarcode = require('jsbarcode');
 let macaddress = require('macaddress');
 let categories = [];
+let families = []; // Added by Ryan Hardie
 let holdOrderList = [];
 let customerOrderList = [];
 let ownUserEdit = null;
@@ -158,6 +160,7 @@ if (auth == undefined) {
         $(".loading").hide();
 
         loadCategories();
+        loadFamilies(); // Added by Ryan Hardie
         loadProducts();
         loadCustomers();
 
@@ -193,6 +196,7 @@ if (auth == undefined) {
 
         if (0 == user.perm_products) { $(".p_one").hide() };
         if (0 == user.perm_categories) { $(".p_two").hide() };
+        //if (0 == user.perm_families) { $(".p_six").hide() }; // Added by Ryan Hardie
         if (0 == user.perm_transactions) { $(".p_three").hide() };
         if (0 == user.perm_users) { $(".p_four").hide() };
         if (0 == user.perm_settings) { $(".p_five").hide() };
@@ -211,12 +215,14 @@ if (auth == undefined) {
 
                 $('#parent').text('');
                 $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
+                //$('#families').html(`<button type="button" id="all" class="btn btn-families btn-white waves-effect waves-light">All</button> `); // Added By Ryan Hardie but not useful I think
 
                 data.forEach(item => {
 
                     if (!categories.includes(item.category)) {
                         categories.push(item.category);
                     }
+
 
                     let item_info = `<div class="col-lg-2 box ${item.category}"
                                 onclick="$(this).addToCart(${item._id}, ${item.quantity}, ${item.stock})">
@@ -252,6 +258,18 @@ if (auth == undefined) {
                 $('#category').html(`<option value="0">Sélectionner</option>`);
                 allCategories.forEach(category => {
                     $('#category').append(`<option value="${category._id}">${category.name}</option>`);
+                });
+            });
+        }
+        
+        
+        function loadFamilies() { // Added by Ryan Hardie
+            $.get(api + 'families/all', function (data) {
+                allFamilies = data;
+                loadFamilyList(); // TODO: À Faire
+                $('#family').html(`<option value="0">Sélectionner</option>`);
+                allFamilies.forEach(family => {
+                    $('#family').append(`<option value="${family._id}">${family.name}</option>`);
                 });
             });
         }
@@ -1234,12 +1252,60 @@ if (auth == undefined) {
         });
 
 
+        $('#saveFamily').submit(function (e) { // Added By Ryan Hardie
+            e.preventDefault();
+            console.log("in SAVEFAMILY")
+
+            if ($('#family_id').val() == "") {
+                method = 'POST';
+            }
+            else {
+                method = 'PUT';
+            }
+
+            $.ajax({
+                type: method,
+                url: api + 'families/family',
+                data: $(this).serialize(),
+                success: function (data, textStatus, jqXHR) {
+                    $('#saveFamily').get(0).reset();
+                    loadFamilies();
+                    loadProducts();
+                    Swal.fire({
+                        title: 'Family Saved',
+                        text: "Select an option below to continue.",
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Add another',
+                        cancelButtonText: 'Close'
+                    }).then((result) => {
+
+                        if (!result.value) {
+                            $("#newFamily").modal('hide');
+                        }
+                    });
+                }, error: function (data) {
+                    console.log(data);
+                }
+
+            });
+
+
+        });
+
+
         $.fn.editProduct = function (index) {
 
             $('#Products').modal('hide');
 
             $("#category option").filter(function () {
                 return $(this).val() == allProducts[index].category;
+            }).prop("selected", true);
+            
+            $("#family option").filter(function () { // Added By Ryan Hardie
+                return $(this).val() == allProducts[index].family;
             }).prop("selected", true);
 
             $('#productName').val(allProducts[index].name);
@@ -1296,6 +1362,13 @@ if (auth == undefined) {
                 $('#perm_categories').prop("checked", false);
             }
 
+            if (allUsers[index].perm_families == 1) { // Added by Ryan Hardie
+                $('#perm_families').prop("checked", true);
+            }
+            else {
+                $('#perm_families').prop("checked", false);
+            }
+
             if (allUsers[index].perm_transactions == 1) {
                 $('#perm_transactions').prop("checked", true);
             }
@@ -1326,6 +1399,14 @@ if (auth == undefined) {
             $('#categoryName').val(allCategories[index].name);
             $('#category_id').val(allCategories[index]._id);
             $('#newCategory').modal('show');
+        }
+
+
+        $.fn.editFamily = function (index) { // Added By Ryan Hardie
+            $('#Families').modal('hide');
+            $('#familyName').val(allFamilies[index].name);
+            $('#family_id').val(allFamilies[index]._id);
+            $('#newFamily').modal('show');
         }
 
 
@@ -1422,6 +1503,37 @@ if (auth == undefined) {
         }
 
 
+        $.fn.deleteFamily = function (id) { // Added By Ryan Hardie
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to delete this family.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+
+                if (result.value) {
+
+                    $.ajax({
+                        url: api + 'families/family/' + id,
+                        type: 'DELETE',
+                        success: function (result) {
+                            loadFamilies();
+                            Swal.fire(
+                                'Done!',
+                                'Family deleted',
+                                'success'
+                            );
+
+                        }
+                    });
+                }
+            });
+        }
+
+
         $('#productModal').click(function () {
             loadProductList();
         });
@@ -1434,6 +1546,11 @@ if (auth == undefined) {
 
         $('#categoryModal').click(function () {
             loadCategoryList();
+        });
+
+
+        $('#familyModal').click(function () { // Added by Ryan Hardie
+            loadFamilyList();
         });
 
 
@@ -1507,6 +1624,10 @@ if (auth == undefined) {
                 let category = allCategories.filter(function (category) {
                     return category._id == product.category;
                 });
+                
+                let family = allFamilies.filter(function (family) { // Added by Ryan Hardie
+                    return family._id == product.family;
+                });
 
 
                 product_list += `<tr>
@@ -1516,6 +1637,7 @@ if (auth == undefined) {
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>
             <td>${category.length > 0 ? category[0].name : ''}</td>
+            <td>${family.length > 0 ? family[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
 
                 if (counter == allProducts.length) {
@@ -1565,6 +1687,38 @@ if (auth == undefined) {
 
                 $('#category_list').html(category_list);
                 $('#categoryList').DataTable({
+                    "autoWidth": false
+                    , "info": true
+                    , "JQueryUI": true
+                    , "ordering": true
+                    , "paging": false
+
+                });
+            }
+        }
+        
+        
+        function loadFamilyList() { // Added by Ryan Hardie
+
+            let family_list = '';
+            let counter = 0;
+            $('#family_list').empty();
+            $('#familyList').DataTable().destroy();
+
+            allFamilies.forEach((family, index) => {
+
+                counter++;
+
+                family_list += `<tr>
+     
+            <td>${family.name}</td>
+            <td><span class="btn-group"><button onClick="$(this).editFamily(${index})" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteFamily(${family._id})" class="btn btn-danger"><i class="fa fa-trash"></i></button></span></td></tr>`;
+            });
+
+            if (counter == allFamilies.length) {
+
+                $('#family_list').html(family_list);
+                $('#familyList').DataTable({
                     "autoWidth": false
                     , "info": true
                     , "JQueryUI": true
