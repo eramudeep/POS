@@ -1260,6 +1260,10 @@ if (auth == undefined) {
             window.location.reload();
         });
         
+        $('#newSupplier').on('hidden.bs.modal', function () { // Added by Ryan Hardie
+            window.location.reload();
+        });
+        
         $('#Suppliers').on('hidden.bs.modal', function () { // Added by Ryan Hardie
             window.location.reload();
         });
