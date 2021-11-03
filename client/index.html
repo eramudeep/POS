@@ -62,7 +62,7 @@
                 <i class="fa fa-plus"></i>
               </button>
             </div>
-            
+
             <div class="btn-group p_seven">
               <button id="supplierModal" data-toggle="modal" data-target="#Suppliers" type="button"
                 class="btn btn-default waves-effect waves-light">
@@ -615,6 +615,20 @@
                 <input type="hidden" name="remove" id="remove_img">
                 <div class="row">
                   <div class="form-group col-sm-6">
+                    <label for="userName">Nom du produit</label>
+                    <input type="text" required="required" name="name" parsley-trigger="change"
+                      placeholder="Entrez le nom du produit" class="form-control" id="productName">
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <!-- TODO: À FAIRE -->
+                    <label for="userName">Code produit</label>
+                    <input type="text" required="required" name="code" parsley-trigger="change"
+                      placeholder="Entrez le code du produit" class="form-control" id="productCode">
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-sm-6">
                     <label for="userName">Catégorie</label>
                     <select name="category" class="form-control" id="category"></select>
                   </div>
@@ -625,68 +639,56 @@
                   </div>
                 </div>
 
-            </div>
-            <div class="row">
-              <div class="form-group col-sm-6">
-                <label for="userName">Nom du produit</label>
-                <input type="text" required="required" name="name" parsley-trigger="change"
-                  placeholder="Entrez le nom du produit" class="form-control" id="productName">
-              </div>
-              <div class="form-group col-sm-6">
-                <!-- TODO: À FAIRE -->
-                <label for="userName">Code produit</label>
-                <input type="text" required="required" name="name" parsley-trigger="change"
-                  placeholder="Entrez le nom du produit" class="form-control" id="productName">
-              </div>
-            </div>
+                <div class="row">
+                  <div class="form-group col-sm-4">
+                    <!-- TODO: À FAIRE -->
+                    <label for="userName">Coût du produit</label>
+                    <input type="text" required="required" name="cost" placeholder="Coût du produit"
+                      class="form-control" id="product_cost">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <!-- TODO: À FAIRE -->
+                    <label for="userName">Prix de vente HT</label>
+                    <input type="text" required="required" name="price" placeholder="Prix de vente HT"
+                      class="form-control" id="product_price">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <!-- TODO: À FAIRE -->
+                    <label for="userName">TVA</label>
+                    <select name="taxes" class="form-control" id="taxes"></select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-sm-4">
+                    <label for="userName">En stock</label>
+                    <input type="text" name="quantity" placeholder="Stock disponible" class="form-control"
+                      id="quantity">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <label for="userName">En commande</label><!-- TODO: À FAIRE -->
+                    <input type="text" name="ordered" placeholder="Stock en commande" class="form-control" id="ordered">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <label for="userName">Stock minimum</label><!-- TODO: À FAIRE -->
+                    <input type="text" name="minimum_inventory" placeholder="Stock minimum" class="form-control"
+                      id="minimum_inventory">
+                  </div>
 
-            <div class="row">
-              <div class="form-group col-sm-4">
-                <!-- TODO: À FAIRE -->
-                <label for="userName">Coût du produit</label>
-                <input type="text" required="required" name="price" placeholder="Coût du produit" class="form-control"
-                  id="product_price">
-              </div>
-              <div class="form-group col-sm-4">
-                <!-- TODO: À FAIRE -->
-                <label for="userName">Prix de vente HT</label>
-                <input type="text" required="required" name="price" placeholder="Prix de vente HT" class="form-control"
-                  id="product_price">
-              </div>
-              <div class="form-group col-sm-4">
-                <!-- TODO: À FAIRE -->
-                <label for="userName">TVA</label>
-                <select name="category" class="form-control" id="category"></select>
-              </div>
-            </div>
-            <div class="row">
-              <div class="form-group col-sm-4">
-                <label for="userName">En stock</label>
-                <input type="text" name="quantity" placeholder="Stock disponible" class="form-control" id="quantity">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="userName">En commande</label><!-- TODO: À FAIRE -->
-                <input type="text" name="quantity" placeholder="Stock en commande" class="form-control" id="quantity">
-              </div>
-              <div class="form-group col-sm-4">
-                <label for="userName">Stock minimum</label><!-- TODO: À FAIRE -->
-                <input type="text" name="quantity" placeholder="Stock minimum" class="form-control" id="quantity">
-              </div>
+                </div>
+                <div class="form-group">
+                  <label><input type="checkbox" name="stock" id="stock" style="max-width: 30px; float: left;">
+                    Désactiver la visibilité des stocks
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label for="userName"><span id="rmv_img" class="btn btn-xs btn-warning">Retirer</span> Image </label>
+                  <div id="current_img"></div>
+                  <input type="file" name="imagename" id="imagename">
+                </div>
 
+                <input type="submit" id="submitProduct" class="btn btn-primary btn-block waves-effect waves-light">
+              </form>
             </div>
-            <div class="form-group">
-              <label><input type="checkbox" name="stock" id="stock" style="max-width: 30px; float: left;">
-                Désactiver la visibilité des stocks
-              </label>
-            </div>
-            <div class="form-group">
-              <label for="userName"><span id="rmv_img" class="btn btn-xs btn-warning">Retirer</span> Image </label>
-              <div id="current_img"></div>
-              <input type="file" name="imagename" id="imagename">
-            </div>
-
-            <input type="submit" id="submitProduct" class="btn btn-primary btn-block waves-effect waves-light">
-            </form>
           </div>
         </div>
       </div>
@@ -757,7 +759,7 @@
                     placeholder="Entrer le code du fournisseur" class="form-control">
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="userName">Île</label>
@@ -770,7 +772,7 @@
                     placeholder="Entrer la ville du fournisseur" class="form-control">
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="userName">Adresse</label>
@@ -783,7 +785,7 @@
                     placeholder="Entrer le code du fournisseur" class="form-control">
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="userName">Boîte postale</label>
@@ -796,7 +798,7 @@
                     placeholder="Entrer le code du fournisseur" class="form-control">
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="userName">Contact</label>
@@ -809,7 +811,7 @@
                     placeholder="Entrer l'Email du fournisseur" class="form-control">
                 </div>
               </div>
-              
+
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="userName">Téléphone</label>

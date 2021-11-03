@@ -62,6 +62,12 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
+const taxes = {
+    1: "0.00%",
+    2: "5.00%",
+    3: "13.00%",
+    4: "16.00%",
+}
 
 $(function () {
 
@@ -160,6 +166,7 @@ if (auth == undefined) {
         $(".loading").hide();
 
         loadCategories();
+        loadTaxes();
         loadSuppliers(); // Added by Ryan Hardie
         loadProducts();
         loadCustomers();
@@ -204,25 +211,22 @@ if (auth == undefined) {
         function loadProducts() {
 
             $.get(api + 'inventory/products', function (data) {
-
                 data.forEach(item => {
                     item.price = parseFloat(item.price).toFixed(2);
                 });
 
                 allProducts = [...data];
 
-                loadProductList();
+                loadProductList(); // potentially the reason of the bug
 
                 $('#parent').text('');
                 $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
                 //$('#suppliers').html(`<button type="button" id="all" class="btn btn-suppliers btn-white waves-effect waves-light">All</button> `); // Added By Ryan Hardie but not useful I think
 
                 data.forEach(item => {
-
                     if (!categories.includes(item.category)) {
                         categories.push(item.category);
                     }
-
 
                     let item_info = `<div class="col-lg-2 box ${item.category}"
                                 onclick="$(this).addToCart(${item._id}, ${item.quantity}, ${item.stock})">
@@ -239,7 +243,6 @@ if (auth == undefined) {
                 });
 
                 categories.forEach(category => {
-
                     let c = allCategories.filter(function (ctg) {
                         return ctg._id == category;
                     })
@@ -255,11 +258,19 @@ if (auth == undefined) {
             $.get(api + 'categories/all', function (data) {
                 allCategories = data;
                 loadCategoryList();
-                $('#category').html(`<option value="0">Sélectionner</option>`);
+                $('#category').html(`<option value="0">Sélectionner Catégorie</option>`);
                 allCategories.forEach(category => {
                     $('#category').append(`<option value="${category._id}">${category.name}</option>`);
                 });
             });
+        }
+        
+        function loadTaxes() {
+            $('#taxes').html(`<option value="0">Sélectionner Taxes</option>`);
+            $('#taxes').append(`<option value="1">${taxes[1]}</option>`);
+            $('#taxes').append(`<option value="2">${taxes[2]}</option>`);
+            $('#taxes').append(`<option value="3">${taxes[3]}</option>`);
+            $('#taxes').append(`<option value="4">${taxes[4]}</option>`);
         }
 
 
@@ -267,7 +278,7 @@ if (auth == undefined) {
             $.get(api + 'suppliers/all', function (data) {
                 allSuppliers = data;
                 loadSupplierList();
-                $('#supplier').html(`<option value="0">Sélectionner</option>`);
+                $('#supplier').html(`<option value="0">Sélectionner Fournisseur</option>`);
                 allSuppliers.forEach(supplier => {
                     $('#supplier').append(`<option value="${supplier._id}">${supplier.name}</option>`);
                 });
@@ -885,7 +896,6 @@ if (auth == undefined) {
 
         $.get(api + 'on-hold', function (data) {
             holdOrderList = data;
-            console.log(data)
             holdOrderlocation.empty();
             clearInterval(dotInterval);
             $(this).randerHoldOrders(holdOrderList, holdOrderlocation, 1);
@@ -903,7 +913,6 @@ if (auth == undefined) {
 
 
         $.fn.randerHoldOrders = function (data, renderLocation, orderType) {
-            console.log("in RanderHoldOrders");
             $.each(data, function (index, order) {
                 $(this).calculatePrice(order);
                 renderLocation.append(
@@ -935,7 +944,6 @@ if (auth == undefined) {
                     )
                 )
             })
-            console.log("fin randerHoldOrders")
         }
 
 
@@ -1636,7 +1644,6 @@ if (auth == undefined) {
             $('#productList').DataTable().destroy();
 
             products.forEach((product, index) => {
-
                 counter++;
 
                 let category = allCategories.filter(function (category) {
@@ -1657,7 +1664,6 @@ if (auth == undefined) {
             <td>${category.length > 0 ? category[0].name : ''}</td>
             <td>${supplier.length > 0 ? supplier[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
-
                 if (counter == allProducts.length) {
 
                     $('#product_list').html(product_list);
@@ -1670,14 +1676,15 @@ if (auth == undefined) {
                         });
                     });
 
-                    $('#productList').DataTable({
+                    // TODO: Determine why this has to be commented and what it does
+                    /*$('#productList').DataTable({
                         "order": [[1, "desc"]]
                         , "autoWidth": false
                         , "info": true
                         , "JQueryUI": true
                         , "ordering": true
                         , "paging": false
-                    });
+                    });*/
                 }
 
             });
@@ -1878,7 +1885,7 @@ if (auth == undefined) {
             e.preventDefault();
             let formData = $(this).serializeObject();
 
-            console.log(formData);
+            console.log(formData); // TODO: Should I delete this?
 
             if (ownUserEdit) {
                 if (formData.password != atob(user.password)) {

@@ -89,11 +89,17 @@ app.post( "/product", upload.single('imagename'), function ( req, res ) {
     
     let Product = {
         _id: parseInt(req.body.id),
-        price: req.body.price,
-        category: req.body.category,
-        quantity: req.body.quantity == "" ? 0 : req.body.quantity,
         name: req.body.name,
-        stock: req.body.stock == "on" ? 0 : 1,    
+        code: req.body.code,
+        category: req.body.category,
+        supplier: req.body.supplier,
+        cost: req.body.cost,
+        price: req.body.price,
+        taxes: req.body.taxes,
+        quantity: req.body.quantity == "" ? 0 : req.body.quantity,
+        ordered: req.body.ordered == "" ? 0 : req.body.ordered,
+        minimum_inventory: req.body.minimum_inventory,
+        stock_visibility: req.body.stock == "on" ? 0 : 1,    
         img: image        
     }
 
