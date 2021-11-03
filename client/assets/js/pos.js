@@ -3,7 +3,7 @@ let index = 0;
 let allUsers = [];
 let allProducts = [];
 let allCategories = [];
-let allFamilies = []; // Added by Ryan Hardie
+let allSuppliers = []; // Added by Ryan Hardie
 let allTransactions = [];
 let sold = [];
 let state = [];
@@ -41,7 +41,7 @@ let html2canvas = require('html2canvas');
 let JsBarcode = require('jsbarcode');
 let macaddress = require('macaddress');
 let categories = [];
-let families = []; // Added by Ryan Hardie
+let suppliers = []; // Added by Ryan Hardie
 let holdOrderList = [];
 let customerOrderList = [];
 let ownUserEdit = null;
@@ -160,7 +160,7 @@ if (auth == undefined) {
         $(".loading").hide();
 
         loadCategories();
-        loadFamilies(); // Added by Ryan Hardie
+        loadSuppliers(); // Added by Ryan Hardie
         loadProducts();
         loadCustomers();
 
@@ -196,7 +196,7 @@ if (auth == undefined) {
 
         if (0 == user.perm_products) { $(".p_one").hide() };
         if (0 == user.perm_categories) { $(".p_two").hide() };
-        //if (0 == user.perm_families) { $(".p_six").hide() }; // Added by Ryan Hardie
+        //if (0 == user.perm_suppliers) { $(".p_six").hide() }; // Added by Ryan Hardie
         if (0 == user.perm_transactions) { $(".p_three").hide() };
         if (0 == user.perm_users) { $(".p_four").hide() };
         if (0 == user.perm_settings) { $(".p_five").hide() };
@@ -215,7 +215,7 @@ if (auth == undefined) {
 
                 $('#parent').text('');
                 $('#categories').html(`<button type="button" id="all" class="btn btn-categories btn-white waves-effect waves-light">All</button> `);
-                //$('#families').html(`<button type="button" id="all" class="btn btn-families btn-white waves-effect waves-light">All</button> `); // Added By Ryan Hardie but not useful I think
+                //$('#suppliers').html(`<button type="button" id="all" class="btn btn-suppliers btn-white waves-effect waves-light">All</button> `); // Added By Ryan Hardie but not useful I think
 
                 data.forEach(item => {
 
@@ -261,15 +261,15 @@ if (auth == undefined) {
                 });
             });
         }
-        
-        
-        function loadFamilies() { // Added by Ryan Hardie
-            $.get(api + 'families/all', function (data) {
-                allFamilies = data;
-                loadFamilyList(); // TODO: À Faire
-                $('#family').html(`<option value="0">Sélectionner</option>`);
-                allFamilies.forEach(family => {
-                    $('#family').append(`<option value="${family._id}">${family.name}</option>`);
+
+
+        function loadSuppliers() { // Added by Ryan Hardie
+            $.get(api + 'suppliers/all', function (data) {
+                allSuppliers = data;
+                loadSupplierList();
+                $('#supplier').html(`<option value="0">Sélectionner</option>`);
+                allSuppliers.forEach(supplier => {
+                    $('#supplier').append(`<option value="${supplier._id}">${supplier.name}</option>`);
                 });
             });
         }
@@ -1240,6 +1240,7 @@ if (auth == undefined) {
 
                         if (!result.value) {
                             $("#newCategory").modal('hide');
+                            window.location.reload();
                         }
                     });
                 }, error: function (data) {
@@ -1251,12 +1252,23 @@ if (auth == undefined) {
 
         });
 
+        $('#newCategory').on('hidden.bs.modal', function () { // Added by Ryan Hardie
+            window.location.reload();
+        });
 
-        $('#saveFamily').submit(function (e) { // Added By Ryan Hardie
+        $('#Categories').on('hidden.bs.modal', function () { // Added by Ryan Hardie
+            window.location.reload();
+        });
+        
+        $('#Suppliers').on('hidden.bs.modal', function () { // Added by Ryan Hardie
+            window.location.reload();
+        });
+
+
+        $('#saveSupplier').submit(function (e) { // Added By Ryan Hardie
             e.preventDefault();
-            console.log("in SAVEFAMILY")
 
-            if ($('#family_id').val() == "") {
+            if ($('#supplier_id').val() == "") {
                 method = 'POST';
             }
             else {
@@ -1265,14 +1277,14 @@ if (auth == undefined) {
 
             $.ajax({
                 type: method,
-                url: api + 'families/family',
+                url: api + 'suppliers/supplier',
                 data: $(this).serialize(),
                 success: function (data, textStatus, jqXHR) {
-                    $('#saveFamily').get(0).reset();
-                    loadFamilies();
+                    $('#saveSupplier').get(0).reset();
+                    loadSuppliers();
                     loadProducts();
                     Swal.fire({
-                        title: 'Family Saved',
+                        title: 'Supplier Saved',
                         text: "Select an option below to continue.",
                         icon: 'success',
                         showCancelButton: true,
@@ -1283,7 +1295,8 @@ if (auth == undefined) {
                     }).then((result) => {
 
                         if (!result.value) {
-                            $("#newFamily").modal('hide');
+                            $("#newSupplier").modal('hide');
+                            window.location.reload();
                         }
                     });
                 }, error: function (data) {
@@ -1291,7 +1304,6 @@ if (auth == undefined) {
                 }
 
             });
-
 
         });
 
@@ -1303,9 +1315,9 @@ if (auth == undefined) {
             $("#category option").filter(function () {
                 return $(this).val() == allProducts[index].category;
             }).prop("selected", true);
-            
-            $("#family option").filter(function () { // Added By Ryan Hardie
-                return $(this).val() == allProducts[index].family;
+
+            $("#supplier option").filter(function () { // Added By Ryan Hardie
+                return $(this).val() == allProducts[index].supplier;
             }).prop("selected", true);
 
             $('#productName').val(allProducts[index].name);
@@ -1362,11 +1374,11 @@ if (auth == undefined) {
                 $('#perm_categories').prop("checked", false);
             }
 
-            if (allUsers[index].perm_families == 1) { // Added by Ryan Hardie
-                $('#perm_families').prop("checked", true);
+            if (allUsers[index].perm_suppliers == 1) { // Added by Ryan Hardie
+                $('#perm_suppliers').prop("checked", true);
             }
             else {
-                $('#perm_families').prop("checked", false);
+                $('#perm_suppliers').prop("checked", false);
             }
 
             if (allUsers[index].perm_transactions == 1) {
@@ -1402,11 +1414,11 @@ if (auth == undefined) {
         }
 
 
-        $.fn.editFamily = function (index) { // Added By Ryan Hardie
-            $('#Families').modal('hide');
-            $('#familyName').val(allFamilies[index].name);
-            $('#family_id').val(allFamilies[index]._id);
-            $('#newFamily').modal('show');
+        $.fn.editSupplier = function (index) { // Added By Ryan Hardie
+            $('#Suppliers').modal('hide');
+            $('#supplierName').val(allSuppliers[index].name);
+            $('#supplier_id').val(allSuppliers[index]._id);
+            $('#newSupplier').modal('show');
         }
 
 
@@ -1489,7 +1501,8 @@ if (auth == undefined) {
                         url: api + 'categories/category/' + id,
                         type: 'DELETE',
                         success: function (result) {
-                            loadCategories();
+                            $('#category-' + id).remove();
+                            //loadCategories();
                             Swal.fire(
                                 'Done!',
                                 'Category deleted',
@@ -1503,10 +1516,10 @@ if (auth == undefined) {
         }
 
 
-        $.fn.deleteFamily = function (id) { // Added By Ryan Hardie
+        $.fn.deleteSupplier = function (id) { // Added By Ryan Hardie
             Swal.fire({
                 title: 'Are you sure?',
-                text: "You are about to delete this family.",
+                text: "You are about to delete this supplier.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -1517,13 +1530,14 @@ if (auth == undefined) {
                 if (result.value) {
 
                     $.ajax({
-                        url: api + 'families/family/' + id,
+                        url: api + 'suppliers/supplier/' + id,
                         type: 'DELETE',
                         success: function (result) {
-                            loadFamilies();
+                            $('#supplier-' + id).remove();
+                            //loadSuppliers();
                             Swal.fire(
                                 'Done!',
-                                'Family deleted',
+                                'Supplier deleted',
                                 'success'
                             );
 
@@ -1535,22 +1549,22 @@ if (auth == undefined) {
 
 
         $('#productModal').click(function () {
-            loadProductList();
+            //loadProductList();
         });
 
 
         $('#usersModal').click(function () {
-            loadUserList();
+            //loadUserList();
         });
 
 
         $('#categoryModal').click(function () {
-            loadCategoryList();
+            //loadCategoryList();
         });
 
 
-        $('#familyModal').click(function () { // Added by Ryan Hardie
-            loadFamilyList();
+        $('#supplierModal').click(function () { // Added by Ryan Hardie
+            //loadSupplierList();
         });
 
 
@@ -1624,9 +1638,9 @@ if (auth == undefined) {
                 let category = allCategories.filter(function (category) {
                     return category._id == product.category;
                 });
-                
-                let family = allFamilies.filter(function (family) { // Added by Ryan Hardie
-                    return family._id == product.family;
+
+                let supplier = allSuppliers.filter(function (supplier) { // Added by Ryan Hardie
+                    return supplier._id == product.supplier;
                 });
 
 
@@ -1637,7 +1651,7 @@ if (auth == undefined) {
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>
             <td>${category.length > 0 ? category[0].name : ''}</td>
-            <td>${family.length > 0 ? family[0].name : ''}</td>
+            <td>${supplier.length > 0 ? supplier[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
 
                 if (counter == allProducts.length) {
@@ -1677,9 +1691,11 @@ if (auth == undefined) {
 
                 counter++;
 
-                category_list += `<tr>
+                category_list += `<tr id="category-${category._id}">
      
+            <td>${category._id}</td>
             <td>${category.name}</td>
+            <td>${category.code}</td>
             <td><span class="btn-group"><button onClick="$(this).editCategory(${index})" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteCategory(${category._id})" class="btn btn-danger"><i class="fa fa-trash"></i></button></span></td></tr>`;
             });
 
@@ -1696,29 +1712,31 @@ if (auth == undefined) {
                 });
             }
         }
-        
-        
-        function loadFamilyList() { // Added by Ryan Hardie
 
-            let family_list = '';
+
+        function loadSupplierList() { // Added by Ryan Hardie
+
+            let supplier_list = '';
             let counter = 0;
-            $('#family_list').empty();
-            $('#familyList').DataTable().destroy();
+            $('#supplier_list').empty();
+            $('#supplierList').DataTable().destroy();
 
-            allFamilies.forEach((family, index) => {
+            allSuppliers.forEach((supplier, index) => {
 
                 counter++;
 
-                family_list += `<tr>
+                supplier_list += `<tr id="supplier-${supplier._id}">
      
-            <td>${family.name}</td>
-            <td><span class="btn-group"><button onClick="$(this).editFamily(${index})" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteFamily(${family._id})" class="btn btn-danger"><i class="fa fa-trash"></i></button></span></td></tr>`;
+            <td>${supplier._id}</td>
+            <td>${supplier.name}</td>
+            <td>${supplier.code}</td>
+            <td><span class="btn-group"><button onClick="$(this).editSupplier(${index})" class="btn btn-warning"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteSupplier(${supplier._id})" class="btn btn-danger"><i class="fa fa-trash"></i></button></span></td></tr>`;
             });
 
-            if (counter == allFamilies.length) {
+            if (counter == allSuppliers.length) {
 
-                $('#family_list').html(family_list);
-                $('#familyList').DataTable({
+                $('#supplier_list').html(supplier_list);
+                $('#supplierList').DataTable({
                     "autoWidth": false
                     , "info": true
                     , "JQueryUI": true

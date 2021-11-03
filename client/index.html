@@ -39,7 +39,7 @@
               </button>
             </div>
 
-            <!-- START TODO: Make it work for families -->
+            <!-- START TODO: Make it work for suppliers -->
             <div class="btn-group p_two">
               <button id="categoryModal" data-toggle="modal" data-target="#Categories" type="button"
                 class="btn btn-default waves-effect waves-light">
@@ -53,11 +53,11 @@
             <!-- END TODO -->
 
             <div class="btn-group p_six">
-              <button id="familyModal" data-toggle="modal" data-target="#Families" type="button"
+              <button id="supplierModal" data-toggle="modal" data-target="#Suppliers" type="button"
                 class="btn btn-default waves-effect waves-light">
-                <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span> Familles
+                <span class="btn-label"><i class="glyphicon glyphicon-th"></i> </span> Fournisseurs
               </button>
-              <button id="newFamilyModal" data-toggle="modal" data-target="#newFamily" type="button"
+              <button id="newSupplierModal" data-toggle="modal" data-target="#newSupplier" type="button"
                 class="btn btn-warning waves-effect waves-light">
                 <i class="fa fa-plus"></i>
               </button>
@@ -603,27 +603,14 @@
                 <input type="hidden" name="img" id="img">
                 <input type="hidden" name="remove" id="remove_img">
                 <div class="row">
-                  <div class="form-group col-sm-4">
+                  <div class="form-group col-sm-6">
                     <label for="userName">Catégorie</label>
                     <select name="category" class="form-control" id="category"></select>
                   </div>
-                  <div class="form-group col-sm-4">
-                    <!-- TODO: À FAIRE -->
-                    <label for="userName">Famille</label>
-                    <select name="family" class="form-control" id="family"></select>
-                  </div>
-                  <div class="form-group col-sm-4 btn-group p_one">
+                  <div class="form-group col-sm-6">
                     <!-- TODO: À FAIRE -->
                     <label for="userName">Fournisseur</label>
-                    <div class="col-sm-10">
-                      <select name="category" class="form-control" id="category"></select>
-                    </div>
-                    <div class="col-sm-2">
-                      <button id="newProductModal" data-toggle="modal" data-target="#newProduct" type="button"
-                        class="btn btn-warning waves-effect waves-light">
-                        <i class="fa fa-plus"></i>
-                      </button>
-                    </div>
+                    <select name="supplier" class="form-control" id="supplier"></select>
                   </div>
                 </div>
 
@@ -698,21 +685,28 @@
     <!-- START NEW CATEGORY MODAL -->
     <div id="newCategory" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
       aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
-      <div class="modal-dialog modal-md">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="mySmallModalLabel">Category
+            <h4 class="modal-title" id="mySmallModalLabel">Catégorie
               <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
             </h4>
           </div>
           <div class="modal-body">
             <form id="saveCategory">
-              <div class="form-group">
-                <label for="userName">Name</label>
-                <input id="category_id" type="hidden" name="id">
-                <input id="categoryName" type="text" required="required" name="name" placeholder="Enter a category name"
-                  class="form-control">
+              <div class="row">
+                <div class="form-group col-md-6">
+                  <label for="userName">Nom</label>
+                  <input id="category_id" type="hidden" name="id">
+                  <input id="categoryName" type="text" required="required" name="name"
+                    placeholder="Enter a category name" class="form-control">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="userName">Code</label>
+                  <input id="categoryCode" type="text" required="required" name="code"
+                    placeholder="Entrer le code de la catégorie" class="form-control">
+                </div>
               </div>
 
               <input type="submit" id="submitCategory" class="btn btn-primary btn-block waves-effect waves-light">
@@ -725,41 +719,41 @@
 
 
 
-    <!-- START ADD NEW FAMILY MODAL -->
-    <div id="newFamily" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+    <!-- START ADD NEW SUPPLIER MODAL -->
+    <div id="newSupplier" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
       aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="mySmallModalLabel">Family
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+              onclick="window.location.reload();">×</button>
+            <h4 class="modal-title" id="mySmallModalLabel">Supplier
               <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
             </h4>
           </div>
           <div class="modal-body">
-            <form id="saveFamily">
+            <form id="saveSupplier">
               <div class="row">
                 <div class="form-group col-md-6">
                   <label for="userName">Nom</label>
-                  <input id="family_id" type="hidden" name="id">
-                  <input id="familyName" type="text" required="required" name="name" placeholder="Entrer le nom de la famille"
-                    class="form-control">
+                  <input id="supplier_id" type="hidden" name="id">
+                  <input id="supplierName" type="text" required="required" name="name"
+                    placeholder="Entrer le nom du fournisseur" class="form-control">
                 </div>
                 <div class="form-group col-md-6">
-                  <label for="userName">Code Famille</label>
-                  <input id="family_code" type="hidden" name="id">
-                  <input id="familyName" type="text" required="required" name="name" placeholder="Entrer le code de la famille"
-                    class="form-control">
+                  <label for="userName">Code Fournisseur</label>
+                  <input id="supplierCode" type="text" required="required" name="code"
+                    placeholder="Entrer le code du fournisseur" class="form-control">
                 </div>
               </div>
 
-              <input type="submit" id="submitFamily" class="btn btn-primary btn-block waves-effect waves-light">
+              <input type="submit" id="submitSupplier" class="btn btn-primary btn-block waves-effect waves-light">
             </form>
           </div>
         </div>
       </div>
     </div>
-    <!-- END ADD NEW FAMILY MODAL -->
+    <!-- END ADD NEW SUPPLIER MODAL -->
 
 
 
@@ -843,7 +837,9 @@
             <table class="table table-bordered" id="categoryList">
               <thead>
                 <tr>
+                  <th>ID</th>
                   <th>Name</th>
+                  <th>Code</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -855,36 +851,38 @@
       </div>
     </div>
     <!-- END CATEGORY LIST -->
-    
-    
-    
-    <!-- START FAMILY LIST -->
-    <div id="Families" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+
+
+
+    <!-- START SUPPLIER LIST -->
+    <div id="Suppliers" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
       aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">
       <div class="modal-dialog modal-md">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 class="modal-title" id="mySmallModalLabel">Familles
+            <h4 class="modal-title" id="mySmallModalLabel">Fournisseurs
               <img class="loading m-t-5" style="margin-left: 35%" height="50px" src="assets/images/loading.gif" alt="">
             </h4>
           </div>
           <div class="modal-body">
-            <table class="table table-bordered" id="familyList">
+            <table class="table table-bordered" id="supplierList">
               <thead>
                 <tr>
+                  <th>ID</th>
                   <th>Nom</th>
+                  <th>Code</th>
                   <th>Action</th>
                 </tr>
               </thead>
-              <tbody id="family_list"></tbody>
+              <tbody id="supplier_list"></tbody>
             </table>
 
           </div>
         </div>
       </div>
     </div>
-    <!-- END FAMILY LIST -->
+    <!-- END SUPPLIER LIST -->
 
 
 
