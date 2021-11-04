@@ -495,10 +495,11 @@ if (auth == undefined) {
             $(this).calculateCart();
             $.each(cartList, function (index, data) {
                 $('#cartTable > tbody').append(
-                    $('<tr>').append(
-                        $('<td>', { text: index + 1 }),
-                        $('<td>', { text: data.product_name }),
-                        $('<td>').append(
+                    $('<div class="row">').append(
+                        //$('<th>', { scope: "row", hidden: 'true' }),
+                        $('<div>', { class: 'col-md-1', text: index + 1 }),
+                        $('<div>', { class: 'col-md-2', text: data.product_name }),
+                        $('<div class="col-md-4">').append(
                             $('<div>', { class: 'input-group' }).append(
                                 $('<div>', { class: 'input-group-btn btn-xs' }).append(
                                     $('<button>', {
@@ -524,8 +525,8 @@ if (auth == undefined) {
                                 )
                             )
                         ),
-                        $('<td>', { text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
-                        $('<td>').append(
+                        $('<div>', { class: 'col-md-2', text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
+                        $('<td class="col-md-1">').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
                                 onclick: '$(this).deleteFromCart(' + index + ')'
