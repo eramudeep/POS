@@ -428,6 +428,7 @@ if (auth == undefined) {
                 product_name: data.name,
                 sku: data.sku,
                 price: data.price,
+                taxes: data.taxes,
                 quantity: 1
             };
 
@@ -494,12 +495,13 @@ if (auth == undefined) {
             $('#cartTable > tbody').empty();
             $(this).calculateCart();
             $.each(cartList, function (index, data) {
+                console.log(data);
                 $('#cartTable > tbody').append(
-                    $('<div class="row">').append(
-                        //$('<th>', { scope: "row", hidden: 'true' }),
-                        $('<div>', { class: 'col-md-1', text: index + 1 }),
-                        $('<div>', { class: 'col-md-2', text: data.product_name }),
-                        $('<div class="col-md-4">').append(
+                    $('<tr>').append(
+                        //$('<th>', { scope: "row", width: '0px' }),
+                        $('<th>', { scope: "row", text: index + 1 }),
+                        $('<td>', { text: data.product_name }),
+                        $('<td width="170px">').append(
                             $('<div>', { class: 'input-group' }).append(
                                 $('<div>', { class: 'input-group-btn btn-xs' }).append(
                                     $('<button>', {
@@ -525,8 +527,9 @@ if (auth == undefined) {
                                 )
                             )
                         ),
-                        $('<div>', { class: 'col-md-2', text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
-                        $('<td class="col-md-1">').append(
+                        $('<td>', { text: taxes[data.taxes] }),
+                        $('<td>', { text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
+                        $('<td>').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
                                 onclick: '$(this).deleteFromCart(' + index + ')'

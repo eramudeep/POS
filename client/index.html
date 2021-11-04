@@ -274,21 +274,29 @@
               </div>
               <br>
               <div>
-                <table class="table m-0" id="cartTable">
+                <table class="table table-sm" id="cartTable">
 
                   <thead>
                     <tr>
                       <th scope="col">#</th>
                       <th scope="col">Item</th>
                       <th scope="col">Qty</th>
-                      <th scope="col">Price</th>
+                      <th scope="col">TVA</th>
+                      <th scope="col">Prix HT</th>
                       <th scope="col">
                         <button onclick="$(this).cancelOrder()" class="btn btn-danger btn-xs"><i
                             class="fa fa-times"></i></button>
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="m-5"></tbody>
+                  <tbody>
+                    <th scope="row">0</th>
+                    <td>nom</td>
+                    <td>Quantité</td>
+                    <td>Prix</td>
+                    <td>Supprimer</td>
+
+                  </tbody>
 
                 </table>
               </div>
