@@ -34,7 +34,6 @@ let Store = require('electron-store');
 const remote = require('electron').remote;
 const app = remote.app;
 let img_path = app.getPath('appData') + '/POS/uploads/';
-let product_img_path = process.cwd() + '/assets/product-images/';
 let api = 'http://' + host + ':' + port + '/api/';
 let btoa = require('btoa');
 let jsPDF = require('jspdf');
@@ -232,7 +231,7 @@ if (auth == undefined) {
                     let item_info = `<div class="col-lg-2 box ${item.category}"
                                 onclick="$(this).addToCart(${item._id}, ${item.quantity}, ${item.stock})">
                             <div class="widget-panel widget-style-2 ">                    
-                            <div id="image"><img src="${item.img == "" ? "./assets/images/default.jpg" : product_img_path + item.img}" id="product_img" alt=""></div>                    
+                            <div id="image"><img src="${item.img == "" ? "./assets/images/default.jpg" : img_path + item.img}" id="product_img" alt=""></div>                    
                                         <div class="text-muted m-t-5 text-center">
                                         <div class="name" id="product_name">${item.name}</div> 
                                         <span class="sku">${item.sku}</span>
@@ -514,7 +513,6 @@ if (auth == undefined) {
                                 ),
                                 $('<input>', {
                                     class: 'form-control',
-                                    min: '1',
                                     type: 'number',
                                     value: data.quantity,
                                     onInput: '$(this).qtInput(' + index + ')'
@@ -530,7 +528,7 @@ if (auth == undefined) {
                             )
                         ),
                         //$('<th>', { text: taxes[data.taxes] }),
-                        $('<div>', { class: 'text-right col-md-3', text: (data.price * data.quantity).toFixed(0) + ' ' + settings.symbol }),
+                        $('<div>', { class: 'text-right col-md-3', text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
                         $('<div class="text-right col-md-1">').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
@@ -1190,13 +1188,11 @@ if (auth == undefined) {
 
             $(this).attr('action', api + 'inventory/product');
             $(this).attr('method', 'POST');
-            console.log("PRODUCT")
-            console.log($(this))
+
             $(this).ajaxSubmit({
                 contentType: 'application/json',
                 success: function (response) {
-                    console.log("RESPONSE")
-                    console.log(response)
+
                     $('#saveProduct').get(0).reset();
                     $('#current_img').text('');
 
@@ -1350,7 +1346,7 @@ if (auth == undefined) {
             if (allProducts[index].img != "") {
 
                 $('#imagename').hide();
-                $('#current_img').html(`<img src="${product_img_path + allProducts[index].img}" alt="">`);
+                $('#current_img').html(`<img src="${img_path + allProducts[index].img}" alt="">`);
                 $('#rmv_img').show();
             }
 
@@ -1665,7 +1661,7 @@ if (auth == undefined) {
 
                 product_list += `<tr>
             <td><img id="`+ product._id + `"></td>
-            <td><img style="max-height: 500px; max-width: 100px;" src="${product.img == "" ? "./assets/images/default.jpg" : product_img_path + product.img}" id="product_img"></td>
+            <td><img style="max-height: 500px; max-width: 50px; border: 1px solid #ddd;" src="${product.img == "" ? "./assets/images/default.jpg" : img_path + product.img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
             <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>

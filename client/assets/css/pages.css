@@ -36,6 +36,7 @@ color: #FFFFFF;
 
 #product_img {
   max-height: 80px;
+  border-radius: 50%;
   max-width: 100px;
 }
 
