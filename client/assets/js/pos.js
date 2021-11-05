@@ -497,11 +497,11 @@ if (auth == undefined) {
             $.each(cartList, function (index, data) {
                 console.log(data);
                 $('#cartTable > tbody').append(
-                    $('<tr>').append(
+                    $('<div class="row">').append(
                         //$('<th>', { scope: "row", width: '0px' }),
-                        $('<th>', { scope: "row", text: index + 1 }),
-                        $('<td>', { text: data.product_name }),
-                        $('<td width="170px">').append(
+                        $('<div>', { class: 'col-md-1', scope: "row", text: index + 1 }),
+                        $('<div>', { class: 'col-md-3', text: data.product_name }),
+                        $('<div class="col-md-4" width="170px">').append(
                             $('<div>', { class: 'input-group' }).append(
                                 $('<div>', { class: 'input-group-btn btn-xs' }).append(
                                     $('<button>', {
@@ -527,9 +527,9 @@ if (auth == undefined) {
                                 )
                             )
                         ),
-                        $('<td>', { text: taxes[data.taxes] }),
-                        $('<td>', { text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
-                        $('<td>').append(
+                        //$('<th>', { text: taxes[data.taxes] }),
+                        $('<div>', { class: 'text-right col-md-3', text: settings.symbol + (data.price * data.quantity).toFixed(2) }),
+                        $('<div class="text-right col-md-1">').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
                                 onclick: '$(this).deleteFromCart(' + index + ')'
