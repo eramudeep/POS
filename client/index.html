@@ -273,29 +273,24 @@
                 </div>
               </div>
               <br>
-              <div>
+              <div class="container" style="margin-top: 70px;">
                 <table class="table table-sm" id="cartTable">
 
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Item</th>
-                      <th scope="col">Qty</th>
-                      <th scope="col">TVA</th>
-                      <th scope="col">Prix HT</th>
-                      <th scope="col">
+                  <thead><!--</thead> style="display:table-header-group;">-->
+                    <div class="row">
+                      <div scope="col" class="col-md-1" style="font-weight: bold;">#</div>
+                      <div scope="col" class="col-md-3" style="font-weight: bold;">Item</div>
+                      <div scope="col" class="text-center col-md-4" style="font-weight: bold;">Qty</div>
+                      <!--<th scope="col">TVA</th>-->
+                      <div scope="col" class="text-right col-md-3" style="font-weight: bold;">Prix HT</div>
+                      <div scope="col" class="text-right col-md-1" style="font-weight: bold;">
                         <button onclick="$(this).cancelOrder()" class="btn btn-danger btn-xs"><i
                             class="fa fa-times"></i></button>
-                      </th>
+                      </div>
                     </tr>
                   </thead>
-                  <tbody>
-                    <th scope="row">0</th>
-                    <td>nom</td>
-                    <td>Quantité</td>
-                    <td>Prix</td>
-                    <td>Supprimer</td>
-
+                  <hr style="border: 1px solid grey; margin-top: 10px; margin-bottom: 10px;" />
+                  <tbody style="max-width: 100%; overflow-x: hidden;">
                   </tbody>
 
                 </table>

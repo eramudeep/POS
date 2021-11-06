@@ -64,18 +64,24 @@ app.get( "/products", function ( req, res ) {
 app.post( "/product", upload.single('imagename'), function ( req, res ) {
 
     let image = '';
+    console.log("req: ")
+    console.log(req.file.originalname)
 
     if(req.body.img != "") {
-        image = req.body.img;        
+        image = req.body.img;     
+        console.log("image: ")
+        console.log(image)   
     }
 
     if(req.file) {
-        image = req.file.filename;  
+        image = req.file.originalname;  
+        //console.log("filename: ")
+        //console.log(image)
     }
  
 
     if(req.body.remove == 1) {
-        const path = './resources/app/public/uploads/product_image/'+ req.body.img;
+        const path = './resources/app/public/uploads/product_image/'+ req.file.originalname;
         try {
           fs.unlinkSync(path)
         } catch(err) {
