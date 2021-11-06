@@ -302,18 +302,42 @@
                   <div class="col-md-3">Total Item(s)</div>
                   <div class="col-md-3">: <sapn id="total">0</sapn>
                   </div>
-                  <div class="col-md-3">Price :</div>
+                  <div class="col-md-3">Discount</div>
+                    <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount"
+                        oninput="$(this).calculateCart();"></div>
+                </div>
+                <hr style="border: 1px solid grey; margin-top: 10px; margin-bottom: 10px;" />
+
+                <div class="row">
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">Sous-total HT :</div>
+                  <div class="col-md-3">: <span id="price">0.0</span></div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">TVA (5%) :</div>
                   <div class="col-md-3">: <span id="price">0.0</span></div>
                 </div>
                 <div class="row">
-                  <div class="col-md-3">Discount</div>
-                  <div class="col-md-3"><input class="form-control" type="number" id="inputDiscount"
-                      oninput="$(this).calculateCart();"></div>
-                  <div class="col-md-3">Gross Price (inc <span id="taxInfo"></span>% Tax)</div>
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">TVA (13%) :</div>
+                  <div class="col-md-3">: <span id="price">0.0</span></div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">TVA (16%) :</div>
+                  <div class="col-md-3">: <span id="price">0.0</span></div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">TOTAL TTC :</div><!--(inc <span id="taxInfo"></span>% Tax)</div>-->
                   <div class="col-md-3">
-                    <h3 id="gross_price">0.00</h3>
+                    <h3 id="gross_price">0</h3>
                   </div>
                 </div>
+                
 
               </div>
 

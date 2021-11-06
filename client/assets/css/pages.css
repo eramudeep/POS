@@ -9,6 +9,12 @@
 
 #cartTable tbody { 
   display: block; 
+  height: calc(100vh - 600px);
+  overflow: auto;
+}
+
+.ancientbody{ 
+  display: block; 
   height: calc(100vh - 425px);
   overflow: auto;
 }
