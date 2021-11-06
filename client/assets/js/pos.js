@@ -63,7 +63,8 @@ let end_date = moment(end).toDate();
 let by_till = 0;
 let by_user = 0;
 let by_status = 1;
-const taxes = {
+
+const taxes = { // Added by Ryan Hardie
     1: "0.00%",
     2: "5.00%",
     3: "13.00%",
@@ -461,32 +462,57 @@ if (auth == undefined) {
 
         $.fn.calculateCart = function () {
             let total = 0;
+
+            let tva_5 = 0; // Added by Ryan Hardie
+            let tva_13 = 0; // Added by Ryan Hardie
+            let tva_16 = 0; // Added by Ryan Hardie
+            
             let grossTotal;
             $('#total').text(cart.length);
             $.each(cart, function (index, data) {
                 total += data.quantity * data.price;
+                console.log(data)
+                if(data.taxes == 2) tva_5 += data.quantity * (data.price * 0.05)
+                if(data.taxes == 3) tva_13 += data.quantity * (data.price * 0.13)
+                if(data.taxes == 4) tva_16 += data.quantity * (data.price * 0.16)
             });
+            
             total = total - $("#inputDiscount").val();
-            $('#price').text(settings.symbol + total.toFixed(2));
+            $('#price').text(total.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
+            
+            //total = total - $("#inputDiscount").val();
+            //$('#price_with_discount').text(total.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
+            
+            // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
+            $('#tva_5').text(tva_5.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
+            
+            // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
+            $('#tva_13').text(tva_13.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
+            
+            // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
+            $('#tva_16').text(tva_16.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
 
             subTotal = total;
 
-            if ($("#inputDiscount").val() >= total) {
-                $("#inputDiscount").val(0);
+            if ($("#inputDiscount").val() > total) {
+                //$("#inputDiscount").val(0);
+                
             }
 
-            if (settings.charge_tax) {
-                totalVat = ((total * vat) / 100);
-                grossTotal = total + totalVat
-            }
+            //if (settings.charge_tax) { Commented by Ryan Hardie
+            //    totalVat = ((total * vat) / 100);
+            //    grossTotal = total + totalVat
+            //}
 
-            else {
-                grossTotal = total;
-            }
+            //else {
+            //    grossTotal = total;
+            //}
 
-            orderTotal = grossTotal.toFixed(2);
+            grossTotal = total + tva_5 + tva_13 + tva_16; // Added by Ryan Hardie
 
-            $("#gross_price").text(settings.symbol + grossTotal.toFixed(2));
+            orderTotal = grossTotal.toFixed(0);
+
+            $("#gross_price").text(grossTotal.toFixed(0) + " " + settings.symbol);
             $("#payablePrice").val(grossTotal);
         };
 
@@ -498,7 +524,7 @@ if (auth == undefined) {
             $.each(cartList, function (index, data) {
                 console.log(data);
                 $('#cartTable > tbody').append(
-                    $('<div class="row">').append(
+                    $('<div class="row hover-table-element" tabindex="' + index + '">').append(
                         //$('<th>', { scope: "row", width: '0px' }),
                         $('<div>', { class: 'col-md-1', style: 'font-weight: bold;', scope: "row", text: index + 1 }),
                         $('<div>', { class: 'col-md-3', text: data.product_name }),
@@ -530,6 +556,10 @@ if (auth == undefined) {
                             )
                         ),
                         //$('<th>', { text: taxes[data.taxes] }),
+                        
+                        // $('<div class="text-right col-md-2">').append(
+                        //     $('<input>', { class: 'form-control', type: 'number', id: 'itemDiscount', oninput: '$(this).calculateNewItemPrice(' + index +')' }) // TODO : Modify oninput fonction
+                        // ),
                         $('<div>', { class: 'text-right col-md-3', text: (data.price * data.quantity).toFixed(0) + ' ' + settings.symbol }),
                         $('<div class="text-right col-md-1">').append(
                             $('<button>', {
@@ -547,6 +577,16 @@ if (auth == undefined) {
 
         $.fn.deleteFromCart = function (index) {
             cart.splice(index, 1);
+            $(this).renderTable(cart);
+
+        }
+        
+        $.fn.calculateNewItemPrice = function (index) {
+            console.log("cart : ")
+            console.log(cart)
+            console.log("itemDiscount : ")
+            console.log($('#itemDiscount').val())
+            cart[index].price -= $('#itemDiscount').val();
             $(this).renderTable(cart);
 
         }

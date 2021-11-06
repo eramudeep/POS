@@ -13,11 +13,26 @@
   overflow: auto;
 }
 
-.ancientbody{ 
+/*.ancientbody{ 
   display: block; 
   height: calc(100vh - 425px);
   overflow: auto;
+}*/
+
+.hover-table-element:hover {
+  background-color: #cccccc;
 }
+
+.hover-table-element:focus {
+  background-color: #cccccc;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 
 #parent { 
   display: block; 
