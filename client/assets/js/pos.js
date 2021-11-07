@@ -72,6 +72,8 @@ const taxes = { // Added by Ryan Hardie
 }
 
 let selectedCartItemIndex = -1; // Added by Ryan Hardie
+let selectedDiscountApplicationType = -1; // Added by Ryan Hardie
+let selectedDiscountApplicationItem = -1; // Added by Ryan Hardie
 
 $(function () {
 
@@ -426,6 +428,7 @@ if (auth == undefined) {
 
 
 
+
         $.fn.addProductToCart = function (data) {
             item = {
                 id: data._id,
@@ -692,11 +695,11 @@ if (auth == undefined) {
             }
 
         });
-        
+
         $("#discountButton").on('click', function () { // Added by Ryan Hardie
             console.log($('#shop').is(':visible'))
             if (cart.length != 0) {
-                if($('#shop').is(':visible')) {
+                if ($('#shop').is(':visible')) {
                     $('#shop').hide();
                     $('#discount_view').show();
                 } else {
@@ -745,6 +748,45 @@ if (auth == undefined) {
             alert("print job complete");
         }
 
+        $.fn.selectDiscountApplicationType = function (selection) {
+            switch (selection) {
+
+                case 1:
+                    selectedDiscountApplicationType = selection;
+                    if (!$("#apply-percentage.active")) $("#apply-percentage").addClass("active")
+                    break;
+
+                case 2:
+                    selectedDiscountApplicationType = selection;
+                    if (!$("#apply-amount.active")) $("#apply-amount").addClass("active")
+                    break;
+
+                default:
+                    selectedDiscountApplicationType = selection;
+                    if (!$("#apply-offer.active")) $("#apply-offer").addClass("active")
+
+            }
+        }
+
+        $.fn.selectDiscountApplicationItem = function (selection) {
+            switch (selection) {
+
+                case 1:
+                    selectedDiscountApplicationType = selection;
+                    if (!$("#apply-on-all.active")) $("#apply-on-all").addClass("active")
+                    break;
+
+                case 2:
+                    selectedDiscountApplicationType = selection;
+                    if (!$("#apply-on-some.active")) $("#apply-on-some").addClass("active")
+                    break;
+
+                default:
+                    selectedDiscountApplicationType = selection;
+                    if (!$("#apply-on-one.active")) $("#apply-on-one").addClass("active")
+
+            }
+        }
 
         $.fn.submitDueOrder = function (status) {
 

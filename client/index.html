@@ -14,6 +14,7 @@
   <link href="assets/plugins/dataTables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
   <link href="assets/plugins/dataTables/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css" />
   <link href="assets/css/pages.css" rel="stylesheet" type="text/css" />
+  <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet"/> -->
 </head>
 
 <body>
@@ -397,32 +398,36 @@
               <hr>
               <div class="row">
                 <div class="col-md-6">
-                  <div class="list-group">
-                    <a href="javascript:void(0)" id="apply-percentage" onclick="paymentType = 1"
-                      class="list-group-item active">
-                      Appliquer un %
-                    </a>
-                    <a href="javascript:void(0)" id="apply-amount" onclick="paymentType = 3"
-                      class="list-group-item">Modifier le prix</a>
-                    <a href="javascript:void(0)" id="apply-offer" onclick="paymentType = 4"
-                      class="list-group-item">Offrir</a>
-                  </div>
+                  <ul class="nav nav-pills nav-stacked" style="border: 1px solid #eeeeee; border-radius: 5px;">
+                    <li class="active"><a href="javascript:void(0)" id="apply-percentage" data-toggle="pill"
+                        onclick="$(this).selectDiscountApplicationType(0)" class="nav-link active">
+                        Appliquer un %
+                      </a></li>
+                    <li><a href="javascript:void(0)" id="apply-amount" data-toggle="pill"
+                        onclick="$(this).selectDiscountApplicationType(1)" class="nav-link">Modifier le prix</a></li>
+                    <li><a href="javascript:void(0)" id="apply-offer" data-toggle="pill"
+                        onclick="$(this).selectDiscountApplicationType(3)" class="nav-link">Offrir</a></li>
+                  </ul>
                 </div>
                 <div class="col-md-6">
-                  <div class="list-group">
-                    <a href="javascript:void(0)" id="apply-on-all" onclick="paymentType = 1"
-                      class="list-group-item active">
-                      Sur tous les items
-                    </a>
-                    <a href="javascript:void(0)" id="apply-on-some" onclick="paymentType = 3"
-                      class="list-group-item">Sur quelques items</a>
-                    <a href="javascript:void(0)" id="apply-on-one" onclick="paymentType = 4" class="list-group-item">Sur
-                      1 seul item</a>
-                  </div>
+                  <ul class="nav nav-pills nav-stacked" style="border: 1px solid #eeeeee; border-radius: 5px;">
+                    <li class="active"><a href="javascript:void(0)" id="apply-on-all" data-toggle="pill"
+                        onclick="$(this).selectDiscountApplicationItem(0)" class="nav-link active">
+                        Sur tous les items
+                      </a></li>
+                    <li><a href="javascript:void(0)" id="apply-on-some" data-toggle="pill"
+                        onclick="$(this).selectDiscountApplicationItem(1)" class="nav-link">Sur quelques items</a></li>
+                    <li><a href="javascript:void(0)" id="apply-on-one" data-toggle="pill"
+                        onclick="$(this).selectDiscountApplicationItem(2)" class="nav-link">Sur
+                        1 seul item</a></li>
+                  </ul>
                 </div>
-                <div class="col-md-8">
+              </div>
+              <br />
+              <div class="col-md-12">
+                <div class="row">
                   <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">Price <span id="price_curr"></span>
+                    <span class="input-group-addon" id="basic-addon3">Prix <span id="price_curr"></span>
                       <input id="payablePrice" readonly type="number" class="form-control"
                         aria-describedby="basic-addon3">
                   </div>
@@ -434,65 +439,71 @@
                   </div>
                   <hr>
                   <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-6">
                       <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(1,false);" class="btn btn-success btn-lg btn-block">1</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(2,false);" class="btn btn-success btn-lg btn-block">2</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(3,false);" class="btn btn-success btn-lg btn-block">3</button>
                         </div>
-                        <div class="col-md-3"></div>
+                        <div class="col-md-2">
+                          <button onclick="$('#payment').val('');$(this).calculateChange();"
+                            class="btn btn-danger btn-block btn-lg">AC</button>
+                        </div>
+                        <!-- <div class="col-md-2"></div> -->
                       </div>
                       <br>
                       <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(4,false);" class="btn btn-success btn-lg btn-block">4</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(5,false);" class="btn btn-success btn-lg btn-block">5</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(6,false);" class="btn btn-success btn-lg btn-block">6</button>
                         </div>
-                        <div class="col-md-3"></div>
+                        <!-- <div class="col-md-2"></div> -->
                       </div>
                       <br>
                       <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(7,false);" class="btn btn-success btn-lg btn-block">7</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(8,false);" class="btn btn-success btn-lg btn-block">8</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(9,false);" class="btn btn-success btn-lg btn-block">9</button>
                         </div>
-                        <div class="col-md-3"></div>
+                        <!-- <div class="col-md-2"></div> -->
                       </div>
                       <br>
                       <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button
                             onclick="$('#payment').val($('#payment').val().substr(0,$('#payment').val().length -1));$(this).calculateChange();"
                             class="btn btn-success btn-lg btn-block">⌫</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).go(0,false);" class="btn btn-success btn-lg btn-block">0</button>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                           <button onclick="$(this).digits()" class="btn btn-success btn-lg btn-block">.</button>
                         </div>
-                        <div class="col-md-3"></div>
+                        <!-- <div class="col-md-2"></div> -->
                       </div>
                     </div>
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-2">
                       <button onclick="$('#payment').val('');$(this).calculateChange();"
                         class="btn btn-danger btn-block btn-lg">AC</button>
-                    </div>
+                    </div> -->
+                    <div class="col-md-3"></div>
                   </div>
                   <br>
                   <div class="input-group" id="cardInfo">
