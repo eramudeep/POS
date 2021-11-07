@@ -396,7 +396,7 @@
             <div class="card-box" id="discount_view">
 
               <hr>
-              <div class="row">
+              <!-- <div class="row">
                 <div class="col-md-6">
                   <ul class="nav nav-pills nav-stacked" style="border: 1px solid #eeeeee; border-radius: 5px;">
                     <li class="active"><a href="javascript:void(0)" id="apply-percentage" data-toggle="pill"
@@ -422,79 +422,102 @@
                         1 seul item</a></li>
                   </ul>
                 </div>
+              </div> -->
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="list-group">
+                    <a href="javascript:void(0)" id="apply-percentage" onclick="$(this).selectDiscountApplicationType(0)" class="list-group-item active">
+                      Appliquer un %
+                    </a>
+                    <a href="javascript:void(0)" id="apply-amount" onclick="$(this).selectDiscountApplicationType(1)" class="list-group-item">Modifier le prix</a>
+                    <a href="javascript:void(0)" id="apply-offer" onclick="$(this).selectDiscountApplicationType(2)" class="list-group-item">Offrir</a>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="list-group">
+                    <a href="javascript:void(0)" id="apply-on-all" onclick="$(this).selectDiscountApplicationItem(0)" class="list-group-item active">
+                      Appliquer un %
+                    </a>
+                    <a href="javascript:void(0)" id="apply-on-some" onclick="$(this).selectDiscountApplicationItem(1)" class="list-group-item">Modifier le prix</a>
+                    <a href="javascript:void(0)" id="apply-on-one" onclick="$(this).selectDiscountApplicationItem(2)" class="list-group-item">Offrir</a>
+                  </div>
+                </div>
               </div>
               <br />
               <div class="col-md-12">
                 <div class="row">
                   <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">Prix <span id="price_curr"></span>
+                    <span class="input-group-addon" id="basic-addon4">Prix <span id="price_curr"></span>
                       <input id="payablePrice" readonly type="number" class="form-control"
-                        aria-describedby="basic-addon3">
+                        aria-describedby="basic-addon4">
                   </div>
                   <br>
                   <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">Remise <span id="payment_curr"></span> </span>
-                    <input type="text" placeholder="0.0" class="form-control" id="discountInput"
-                      aria-describedby="basic-addon3">
+                    <span class="input-group-addon" id="basic-addon5">Remise <span id="discount_curr"></span> </span>
+                    <input type="text" placeholder="0" class="form-control" id="discountInput"
+                      aria-describedby="basic-addon5">
                   </div>
                   <hr>
                   <div class="row">
-                    <div class="col-md-4"></div>
+                    <div class="col-md-3"></div>
                     <div class="col-md-6">
                       <div class="row">
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(1,false);" class="btn btn-success btn-lg btn-block">1</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(1,'discount_pad');" class="btn btn-success btn-lg btn-block">1</button>
                         </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(2,false);" class="btn btn-success btn-lg btn-block">2</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(2,'discount_pad');" class="btn btn-success btn-lg btn-block">2</button>
                         </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(3,false);" class="btn btn-success btn-lg btn-block">3</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(3,'discount_pad');" class="btn btn-success btn-lg btn-block">3</button>
                         </div>
-                        <div class="col-md-2">
-                          <button onclick="$('#payment').val('');$(this).calculateChange();"
+                        <div class="col-md-3">
+                          <button
+                            onclick="$('#discountInput').val($('#discountInput').val().substr(0,$('#discountInput').val().length -1));$(this).calculateChange();"
+                            class="btn btn-secondary btn-lg btn-block">⌫</button>
+                        </div>
+                        
+                        <!-- <div class="col-md-2"></div> -->
+                      </div>
+                      <br>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(4,'discount_pad');" class="btn btn-success btn-lg btn-block">4</button>
+                        </div>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(5,'discount_pad');" class="btn btn-success btn-lg btn-block">5</button>
+                        </div>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(6,'discount_pad');" class="btn btn-success btn-lg btn-block">6</button>
+                        </div>
+                        <div class="col-md-3">
+                          <button onclick="$('#discountInput').val('');$(this).calculateChange();"
                             class="btn btn-danger btn-block btn-lg">AC</button>
                         </div>
                         <!-- <div class="col-md-2"></div> -->
                       </div>
                       <br>
                       <div class="row">
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(4,false);" class="btn btn-success btn-lg btn-block">4</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(7,'discount_pad');" class="btn btn-success btn-lg btn-block">7</button>
                         </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(5,false);" class="btn btn-success btn-lg btn-block">5</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(8,'discount_pad');" class="btn btn-success btn-lg btn-block">8</button>
                         </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(6,false);" class="btn btn-success btn-lg btn-block">6</button>
-                        </div>
-                        <!-- <div class="col-md-2"></div> -->
-                      </div>
-                      <br>
-                      <div class="row">
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(7,false);" class="btn btn-success btn-lg btn-block">7</button>
-                        </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(8,false);" class="btn btn-success btn-lg btn-block">8</button>
-                        </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(9,false);" class="btn btn-success btn-lg btn-block">9</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(9,'discount_pad');" class="btn btn-success btn-lg btn-block">9</button>
                         </div>
                         <!-- <div class="col-md-2"></div> -->
                       </div>
                       <br>
                       <div class="row">
-                        <div class="col-md-2">
-                          <button
-                            onclick="$('#payment').val($('#payment').val().substr(0,$('#payment').val().length -1));$(this).calculateChange();"
-                            class="btn btn-success btn-lg btn-block">⌫</button>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(0,'discount_pad');" class="btn btn-success btn-lg btn-block">0</button>
                         </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).go(0,false);" class="btn btn-success btn-lg btn-block">0</button>
-                        </div>
-                        <div class="col-md-2">
-                          <button onclick="$(this).digits()" class="btn btn-success btn-lg btn-block">.</button>
+                        <div class="col-md-3">
+                          <button onclick="$(this).digits('discount_pad')" class="btn btn-success btn-lg btn-block">.</button>
                         </div>
                         <!-- <div class="col-md-2"></div> -->
                       </div>
@@ -505,11 +528,11 @@
                     </div> -->
                     <div class="col-md-3"></div>
                   </div>
-                  <br>
-                  <div class="input-group" id="cardInfo">
+                  <hr>
+                  <!-- <div class="input-group" id="cardInfo">
                     <span class="input-group-addon" id="basic-addon3">Card Info </span>
                     <input type="text" class="form-control" id="paymentInfo" aria-describedby="basic-addon3">
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <hr>
@@ -548,37 +571,37 @@
               <hr>
               <div class="row">
                 <div class="col-md-4">
-                  <button onclick="$(this).go(1,true);" class="btn btn-success btn-lg btn-block">1</button>
+                  <button onclick="$(this).go(1,'refOrder_pad');" class="btn btn-success btn-lg btn-block">1</button>
                 </div>
                 <div class="col-md-4">
-                  <button onclick="$(this).go(2,true);" class="btn btn-success btn-lg btn-block">2</button>
+                  <button onclick="$(this).go(2,'refOrder_pad');" class="btn btn-success btn-lg btn-block">2</button>
                 </div>
                 <div class="col-md-4">
-                  <button onclick="$(this).go(3,true);" class="btn btn-success btn-lg btn-block">3</button>
-                </div>
-              </div>
-              <br>
-              <div class="row">
-                <div class="col-md-4">
-                  <button onclick="$(this).go(4,true);" class="btn btn-success btn-lg btn-block">4</button>
-                </div>
-                <div class="col-md-4">
-                  <button onclick="$(this).go(5,true);" class="btn btn-success btn-lg btn-block">5</button>
-                </div>
-                <div class="col-md-4">
-                  <button onclick="$(this).go(6,true);" class="btn btn-success btn-lg btn-block">6</button>
+                  <button onclick="$(this).go(3,'refOrder_pad');" class="btn btn-success btn-lg btn-block">3</button>
                 </div>
               </div>
               <br>
               <div class="row">
                 <div class="col-md-4">
-                  <button onclick="$(this).go(7,true);" class="btn btn-success btn-lg btn-block">7</button>
+                  <button onclick="$(this).go(4,'refOrder_pad');" class="btn btn-success btn-lg btn-block">4</button>
                 </div>
                 <div class="col-md-4">
-                  <button onclick="$(this).go(8,true);" class="btn btn-success btn-lg btn-block">8</button>
+                  <button onclick="$(this).go(5,'refOrder_pad');" class="btn btn-success btn-lg btn-block">5</button>
                 </div>
                 <div class="col-md-4">
-                  <button onclick="$(this).go(9,true);" class="btn btn-success btn-lg btn-block">9</button>
+                  <button onclick="$(this).go(6,'refOrder_pad');" class="btn btn-success btn-lg btn-block">6</button>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-md-4">
+                  <button onclick="$(this).go(7,'refOrder_pad');" class="btn btn-success btn-lg btn-block">7</button>
+                </div>
+                <div class="col-md-4">
+                  <button onclick="$(this).go(8,'refOrder_pad');" class="btn btn-success btn-lg btn-block">8</button>
+                </div>
+                <div class="col-md-4">
+                  <button onclick="$(this).go(9,'refOrder_pad');" class="btn btn-success btn-lg btn-block">9</button>
                 </div>
               </div>
               <br>
@@ -588,7 +611,7 @@
                     class="btn btn-success btn-lg btn-block">⌫</button>
                 </div>
                 <div class="col-md-4">
-                  <button onclick="$(this).go(0,true);" class="btn btn-success btn-lg btn-block">0</button>
+                  <button onclick="$(this).go(0,'refOrder_pad');" class="btn btn-success btn-lg btn-block">0</button>
                 </div>
                 <div class="col-md-4">
                   <button onclick="$('#refNumber').val('')" class="btn btn-success btn-lg btn-block">AC</button>
@@ -639,39 +662,39 @@
                     <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-3">
-                          <button onclick="$(this).go(1,false);" class="btn btn-success btn-lg btn-block">1</button>
+                          <button onclick="$(this).go(1,'payment_pad');" class="btn btn-success btn-lg btn-block">1</button>
                         </div>
                         <div class="col-md-3">
-                          <button onclick="$(this).go(2,false);" class="btn btn-success btn-lg btn-block">2</button>
+                          <button onclick="$(this).go(2,'payment_pad');" class="btn btn-success btn-lg btn-block">2</button>
                         </div>
                         <div class="col-md-3">
-                          <button onclick="$(this).go(3,false);" class="btn btn-success btn-lg btn-block">3</button>
-                        </div>
-                        <div class="col-md-3"></div>
-                      </div>
-                      <br>
-                      <div class="row">
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(4,false);" class="btn btn-success btn-lg btn-block">4</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(5,false);" class="btn btn-success btn-lg btn-block">5</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(6,false);" class="btn btn-success btn-lg btn-block">6</button>
+                          <button onclick="$(this).go(3,'payment_pad');" class="btn btn-success btn-lg btn-block">3</button>
                         </div>
                         <div class="col-md-3"></div>
                       </div>
                       <br>
                       <div class="row">
                         <div class="col-md-3">
-                          <button onclick="$(this).go(7,false);" class="btn btn-success btn-lg btn-block">7</button>
+                          <button onclick="$(this).go(4,'payment_pad');" class="btn btn-success btn-lg btn-block">4</button>
                         </div>
                         <div class="col-md-3">
-                          <button onclick="$(this).go(8,false);" class="btn btn-success btn-lg btn-block">8</button>
+                          <button onclick="$(this).go(5,'payment_pad');" class="btn btn-success btn-lg btn-block">5</button>
                         </div>
                         <div class="col-md-3">
-                          <button onclick="$(this).go(9,false);" class="btn btn-success btn-lg btn-block">9</button>
+                          <button onclick="$(this).go(6,'payment_pad');" class="btn btn-success btn-lg btn-block">6</button>
+                        </div>
+                        <div class="col-md-3"></div>
+                      </div>
+                      <br>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(7,'payment_pad');" class="btn btn-success btn-lg btn-block">7</button>
+                        </div>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(8,'payment_pad');" class="btn btn-success btn-lg btn-block">8</button>
+                        </div>
+                        <div class="col-md-3">
+                          <button onclick="$(this).go(9,'payment_pad');" class="btn btn-success btn-lg btn-block">9</button>
                         </div>
                         <div class="col-md-3"></div>
                       </div>
@@ -683,10 +706,10 @@
                             class="btn btn-success btn-lg btn-block">⌫</button>
                         </div>
                         <div class="col-md-3">
-                          <button onclick="$(this).go(0,false);" class="btn btn-success btn-lg btn-block">0</button>
+                          <button onclick="$(this).go(0,'payment_pad');" class="btn btn-success btn-lg btn-block">0</button>
                         </div>
                         <div class="col-md-3">
-                          <button onclick="$(this).digits()" class="btn btn-success btn-lg btn-block">.</button>
+                          <button onclick="$(this).digits('payment_pad')" class="btn btn-success btn-lg btn-block">.</button>
                         </div>
                         <div class="col-md-3"></div>
                       </div>
@@ -724,142 +747,7 @@
       </div><!-- /.modal -->
 
 
-      <!--  START DISCOUNT MODAL  -->
-      <div id="discountModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog"
-        aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h4 class="modal-title" id="myLargeModalLabel">Remise</h4>
-            </div>
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="list-group">
-                    <a href="javascript:void(0)" id="apply-percentage" onclick="paymentType = 1"
-                      class="list-group-item active">
-                      Appliquer un %
-                    </a>
-                    <a href="javascript:void(0)" id="apply-amount" onclick="paymentType = 3"
-                      class="list-group-item">Modifier le prix</a>
-                    <a href="javascript:void(0)" id="apply-offer" onclick="paymentType = 4"
-                      class="list-group-item">Offrir</a>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="list-group">
-                    <a href="javascript:void(0)" id="apply-on-all" onclick="paymentType = 1"
-                      class="list-group-item active">
-                      Sur tous les items
-                    </a>
-                    <a href="javascript:void(0)" id="apply-on-some" onclick="paymentType = 3"
-                      class="list-group-item">Sur quelques items</a>
-                    <a href="javascript:void(0)" id="apply-on-one" onclick="paymentType = 4" class="list-group-item">Sur
-                      1 seul item</a>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">Price <span id="price_curr"></span>
-                      <input id="payablePrice" readonly type="number" class="form-control"
-                        aria-describedby="basic-addon3">
-                  </div>
-                  <br>
-                  <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon3">Remise <span id="payment_curr"></span> </span>
-                    <input type="text" placeholder="0.0" class="form-control" id="discountInput"
-                      aria-describedby="basic-addon3">
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-md-9">
-                      <div class="row">
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(1,false);" class="btn btn-success btn-lg btn-block">1</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(2,false);" class="btn btn-success btn-lg btn-block">2</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(3,false);" class="btn btn-success btn-lg btn-block">3</button>
-                        </div>
-                        <div class="col-md-3"></div>
-                      </div>
-                      <br>
-                      <div class="row">
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(4,false);" class="btn btn-success btn-lg btn-block">4</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(5,false);" class="btn btn-success btn-lg btn-block">5</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(6,false);" class="btn btn-success btn-lg btn-block">6</button>
-                        </div>
-                        <div class="col-md-3"></div>
-                      </div>
-                      <br>
-                      <div class="row">
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(7,false);" class="btn btn-success btn-lg btn-block">7</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(8,false);" class="btn btn-success btn-lg btn-block">8</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(9,false);" class="btn btn-success btn-lg btn-block">9</button>
-                        </div>
-                        <div class="col-md-3"></div>
-                      </div>
-                      <br>
-                      <div class="row">
-                        <div class="col-md-3">
-                          <button
-                            onclick="$('#payment').val($('#payment').val().substr(0,$('#payment').val().length -1));$(this).calculateChange();"
-                            class="btn btn-success btn-lg btn-block">⌫</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).go(0,false);" class="btn btn-success btn-lg btn-block">0</button>
-                        </div>
-                        <div class="col-md-3">
-                          <button onclick="$(this).digits()" class="btn btn-success btn-lg btn-block">.</button>
-                        </div>
-                        <div class="col-md-3"></div>
-                      </div>
-                    </div>
-                    <div class="col-md-3">
-                      <button onclick="$('#payment').val('');$(this).calculateChange();"
-                        class="btn btn-danger btn-block btn-lg">AC</button>
-                    </div>
-                  </div>
-                  <br>
-                  <div class="input-group" id="cardInfo">
-                    <span class="input-group-addon" id="basic-addon3">Card Info </span>
-                    <input type="text" class="form-control" id="paymentInfo" aria-describedby="basic-addon3">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Change <span
-                      id="change_curr"></span><span id="change"></span> </div>
-                </div>
-                <div class="col-md-6">
-                  <button type="button" id="confirmPayment"
-                    class="btn btn-default btn-block btn-lg waves-effect waves-light">Confirm
-                    Payment</button>
-                </div>
-              </div>
-
-
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
-      <!-- END DISCOUNT MODAL -->
+      
 
       <div id="newCustomer" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
         aria-labelledby="mySmallModalLabel" aria-hidden="true" style="display: none;">

@@ -75,6 +75,9 @@ let selectedCartItemIndex = -1; // Added by Ryan Hardie
 let selectedDiscountApplicationType = -1; // Added by Ryan Hardie
 let selectedDiscountApplicationItem = -1; // Added by Ryan Hardie
 
+$('#discount_view').hide(); // Added by Ryan Hardie
+$("#discount_curr").text('%');
+
 $(function () {
 
     function cb(start, end) {
@@ -499,10 +502,10 @@ if (auth == undefined) {
 
             subTotal = total;
 
-            if ($("#inputDiscount").val() > total) {
-                //$("#inputDiscount").val(0);
+            // if ($("#inputDiscount").val() > total) {
+            //     $("#inputDiscount").val(0);
 
-            }
+            // }
 
             //if (settings.charge_tax) { Commented by Ryan Hardie
             //    totalVat = ((total * vat) / 100);
@@ -753,17 +756,18 @@ if (auth == undefined) {
 
                 case 1:
                     selectedDiscountApplicationType = selection;
-                    if (!$("#apply-percentage.active")) $("#apply-percentage").addClass("active")
+                    $("#discount_curr").text(settings.symbol);
                     break;
 
                 case 2:
                     selectedDiscountApplicationType = selection;
-                    if (!$("#apply-amount.active")) $("#apply-amount").addClass("active")
+                    $("#discountInput").val(subTotal);
+                    //$(this).calculateCart()
                     break;
 
                 default:
                     selectedDiscountApplicationType = selection;
-                    if (!$("#apply-offer.active")) $("#apply-offer").addClass("active")
+                    $("#discount_curr").text('%');
 
             }
         }
@@ -773,18 +777,85 @@ if (auth == undefined) {
 
                 case 1:
                     selectedDiscountApplicationType = selection;
-                    if (!$("#apply-on-all.active")) $("#apply-on-all").addClass("active")
                     break;
 
                 case 2:
                     selectedDiscountApplicationType = selection;
-                    if (!$("#apply-on-some.active")) $("#apply-on-some").addClass("active")
                     break;
 
                 default:
                     selectedDiscountApplicationType = selection;
-                    if (!$("#apply-on-one.active")) $("#apply-on-one").addClass("active")
 
+            }
+        }
+
+        const pad = { // Added by Ryan Hardie
+            "refOrder_pad": 0,
+            "payment_pad": 1,
+            "discount_pad": 2,
+        }
+
+        $.fn.go = function (value,isDueInput) {
+            // if(isDueInput){
+            //     $("#refNumber").val($("#refNumber").val()+""+value)
+            // }else if (!isDueInput){
+            //     $("#payment").val($("#payment").val()+""+value);
+            //     $(this).calculateChange();
+            // } else {
+            //     $('#discountInput').val($('#discountInput').val() + "" + value);
+            //     console.log("discount value")
+            //     console.log(value)
+            // }
+            console.log("discount value")
+            console.log(pad[isDueInput])
+    
+            switch (pad[isDueInput]) {
+                case 1:
+                    $("#payment").val($("#payment").val()+""+value);
+                    $(this).calculateChange();
+                    break;
+                case 2:
+                    $('#discountInput').val($('#discountInput').val() + value);
+                    console.log($('#discountInput').val())
+                    console.log('price before')
+                    console.log($('#price').val())
+                    $('#price').val(subTotal - $('#discountInput').val())
+                    console.log('price after')
+                    console.log($('#price').val())
+                    break;
+                default:
+                    $("#refNumber").val($("#refNumber").val()+""+value);
+    
+            }
+        }
+    
+    
+        $.fn.digits = function(isDueInput){
+            switch (pad[isDueInput]) {
+                case 1:
+                    $("#payment").val($("#payment").val()+".");
+                    $(this).calculateChange();
+                    break;
+                case 2:
+                    $('#discountInput').val($('#discountInput').val() + ".");
+                    break;
+                default:
+                    //$("#refNumber").val($("#refNumber").val()+""+value);
+    
+            }
+        }
+    
+        $.fn.calculateChange = function () {
+            var change = $("#payablePrice").val() - $("#payment").val();
+            if(change <= 0){
+                $("#change").text(change.toFixed(2));
+            }else{
+                $("#change").text('0')
+            }
+            if(change <= 0){
+                $("#confirmPayment").show();
+            }else{
+                $("#confirmPayment").hide();
             }
         }
 
@@ -806,6 +877,7 @@ if (auth == undefined) {
             let date = moment(currentTime).format("YYYY-MM-DD HH:mm:ss");
             let paid = $("#payment").val() == "" ? "" : parseFloat($("#payment").val()).toFixed(2);
             let change = $("#change").text() == "" ? "" : parseFloat($("#change").text()).toFixed(2);
+            //let discount = $("#discountInput").text() == "" ? "" : parseFloat($("#discountInput").text()).toFixed(2); // Added by Ryan Hardie
             let refNumber = $("#refNumber").val();
             let orderNumber = holdOrder;
             let type = "";
@@ -1006,7 +1078,7 @@ if (auth == undefined) {
                     $(".loading").hide();
                     $("#dueModal").modal('hide');
                     $("#paymentModel").modal('hide');
-                    $("#discountModal").modal('hide'); // Added by Ryan Hardie
+                    //$("#discountModal").modal('hide'); // Added by Ryan Hardie
                     $(this).getHoldOrders();
                     $(this).getCustomerOrders();
                     $(this).renderTable(cart);
@@ -1022,6 +1094,9 @@ if (auth == undefined) {
             $("#refNumber").val('');
             $("#change").text('');
             $("#payment").val('');
+            
+            //$("#discountInput").val(''); // Added by Ryan Hardie
+
 
         }
 
@@ -1085,7 +1160,7 @@ if (auth == undefined) {
                 totalPrice += product.price * product.quantity;
             })
 
-            let vat = (totalPrice * data.vat) / 100;
+            let vat = (totalPrice * data.vat) / 100; // TODO : Check if vat style useful
             totalPrice = ((totalPrice + vat) - data.discount).toFixed(0);
 
             return totalPrice;
@@ -1253,6 +1328,10 @@ if (auth == undefined) {
         $("#cardInfo").hide();
 
         $("#payment").on('input', function () {
+            $(this).calculateChange();
+        });
+        
+        $("#discountInput").on('input', function () { // Added by Ryan Hardie
             $(this).calculateChange();
         });
 
