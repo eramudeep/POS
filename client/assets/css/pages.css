@@ -20,12 +20,12 @@
 }*/
 
 .hover-table-element:hover {
-  background-color: #cccccc;
+  background: #eeeeee;
 }
 
-.hover-table-element:focus {
-  background-color: #cccccc;
-}
+/* .hover-table-element:focus {
+  background-color: #eeeeee;
+} */
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 

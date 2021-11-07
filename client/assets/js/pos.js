@@ -71,6 +71,8 @@ const taxes = { // Added by Ryan Hardie
     4: "16.00%",
 }
 
+let selectedCartItemIndex = -1; // Added by Ryan Hardie
+
 $(function () {
 
     function cb(start, end) {
@@ -266,7 +268,7 @@ if (auth == undefined) {
                 });
             });
         }
-        
+
         function loadTaxes() {
             $('#taxes').html(`<option value="0">Sélectionner Taxes</option>`);
             $('#taxes').append(`<option value="1">${taxes[1]}</option>`);
@@ -466,29 +468,29 @@ if (auth == undefined) {
             let tva_5 = 0; // Added by Ryan Hardie
             let tva_13 = 0; // Added by Ryan Hardie
             let tva_16 = 0; // Added by Ryan Hardie
-            
+
             let grossTotal;
             $('#total').text(cart.length);
             $.each(cart, function (index, data) {
                 total += data.quantity * data.price;
                 console.log(data)
-                if(data.taxes == 2) tva_5 += data.quantity * (data.price * 0.05)
-                if(data.taxes == 3) tva_13 += data.quantity * (data.price * 0.13)
-                if(data.taxes == 4) tva_16 += data.quantity * (data.price * 0.16)
+                if (data.taxes == 2) tva_5 += data.quantity * (data.price * 0.05)
+                if (data.taxes == 3) tva_13 += data.quantity * (data.price * 0.13)
+                if (data.taxes == 4) tva_16 += data.quantity * (data.price * 0.16)
             });
-            
-            total = total - $("#inputDiscount").val();
+
+            total = total; // - $("#inputDiscount").val() >= 0 ? $("#inputDiscount").val() : 0;
             $('#price').text(total.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
-            
+
             //total = total - $("#inputDiscount").val();
             //$('#price_with_discount').text(total.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
-            
+
             // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
             $('#tva_5').text(tva_5.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
-            
+
             // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
             $('#tva_13').text(tva_13.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
-            
+
             // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
             $('#tva_16').text(tva_16.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
 
@@ -496,7 +498,7 @@ if (auth == undefined) {
 
             if ($("#inputDiscount").val() > total) {
                 //$("#inputDiscount").val(0);
-                
+
             }
 
             //if (settings.charge_tax) { Commented by Ryan Hardie
@@ -522,9 +524,9 @@ if (auth == undefined) {
             $('#cartTable > tbody').empty();
             $(this).calculateCart();
             $.each(cartList, function (index, data) {
-                console.log(data);
+                //console.log(data);
                 $('#cartTable > tbody').append(
-                    $('<div class="row hover-table-element" tabindex="' + index + '">').append(
+                    $('<div class="row hover-table-element" id="cartItem_' + index + '" tabindex="' + index + '" onclick="$(this).selectCartItem(' + index + ')">').append(
                         //$('<th>', { scope: "row", width: '0px' }),
                         $('<div>', { class: 'col-md-1', style: 'font-weight: bold;', scope: "row", text: index + 1 }),
                         $('<div>', { class: 'col-md-3', text: data.product_name }),
@@ -556,7 +558,7 @@ if (auth == undefined) {
                             )
                         ),
                         //$('<th>', { text: taxes[data.taxes] }),
-                        
+
                         // $('<div class="text-right col-md-2">').append(
                         //     $('<input>', { class: 'form-control', type: 'number', id: 'itemDiscount', oninput: '$(this).calculateNewItemPrice(' + index +')' }) // TODO : Modify oninput fonction
                         // ),
@@ -580,15 +582,24 @@ if (auth == undefined) {
             $(this).renderTable(cart);
 
         }
-        
-        $.fn.calculateNewItemPrice = function (index) {
-            console.log("cart : ")
-            console.log(cart)
-            console.log("itemDiscount : ")
-            console.log($('#itemDiscount').val())
-            cart[index].price -= $('#itemDiscount').val();
-            $(this).renderTable(cart);
 
+        // $.fn.calculateNewItemPrice = function (index) {
+        //     console.log("cart : ")
+        //     console.log(cart)
+        //     console.log("itemDiscount : ")
+        //     console.log($('#itemDiscount').val())
+        //     cart[index].price -= $('#itemDiscount').val();
+        //     $(this).renderTable(cart);
+        // }
+
+        $.fn.selectCartItem = function (index) {
+            console.log("IN SELECTECARTITEM : ")
+            selectedCartItemIndex = index;
+            console.log('#cartItem_' + selectedCartItemIndex)
+            document.getElementById('cartItem_' + selectedCartItemIndex).style.background = "#eeeeee"; // TODO : Make it work
+
+            console.log(document.getElementById('cartItem_' + selectedCartItemIndex))
+            $(this).renderTable(cart);
         }
 
 
@@ -679,6 +690,38 @@ if (auth == undefined) {
                     'warning'
                 );
             }
+
+        });
+        
+        $("#discountButton").on('click', function () { // Added by Ryan Hardie
+            console.log($('#shop').is(':visible'))
+            if (cart.length != 0) {
+                if($('#shop').is(':visible')) {
+                    $('#shop').hide();
+                    $('#discount_view').show();
+                } else {
+                    $('#shop').show();
+                    $('#discount_view').hide();
+                }
+                //$("#discountModal").modal('toggle');
+            } else {
+                Swal.fire(
+                    'Oops!',
+                    "Il n'y a aucun item dans le panier",
+                    'warning'
+                );
+            }
+
+        });
+
+        $('#transactions').click(function () {
+            loadTransactions();
+            loadUserList();
+
+            $('#pos_view').hide();
+            $('#pointofsale').show();
+            $('#transactions_view').show();
+            $(this).hide();
 
         });
 
@@ -921,6 +964,7 @@ if (auth == undefined) {
                     $(".loading").hide();
                     $("#dueModal").modal('hide');
                     $("#paymentModel").modal('hide');
+                    $("#discountModal").modal('hide'); // Added by Ryan Hardie
                     $(this).getHoldOrders();
                     $(this).getCustomerOrders();
                     $(this).renderTable(cart);
@@ -1315,11 +1359,11 @@ if (auth == undefined) {
         $('#Categories').on('hidden.bs.modal', function () { // Added by Ryan Hardie
             window.location.reload();
         });
-        
+
         $('#newSupplier').on('hidden.bs.modal', function () { // Added by Ryan Hardie
             window.location.reload();
         });
-        
+
         $('#Suppliers').on('hidden.bs.modal', function () { // Added by Ryan Hardie
             window.location.reload();
         });
