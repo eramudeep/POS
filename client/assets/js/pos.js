@@ -71,12 +71,12 @@ const taxes = { // Added by Ryan Hardie
     4: "16.00%",
 }
 
-let selectedCartItemIndex = -1; // Added by Ryan Hardie
-let selectedDiscountApplicationType = -1; // Added by Ryan Hardie
-let selectedDiscountApplicationItem = -1; // Added by Ryan Hardie
+let selectedCartItems = new Array(); // Added by Ryan Hardie
+let selectedDiscountApplicationType = 0; // Added by Ryan Hardie
+let selectedDiscountApplicationItem = 0; // Added by Ryan Hardie
 
 $('#discount_view').hide(); // Added by Ryan Hardie
-$("#discount_curr").text('%');
+$("#discount_curr").text('%'); // Added by Ryan Hardie
 
 $(function () {
 
@@ -598,14 +598,47 @@ if (auth == undefined) {
         //     $(this).renderTable(cart);
         // }
 
-        $.fn.selectCartItem = function (index) {
-            console.log("IN SELECTECARTITEM : ")
-            selectedCartItemIndex = index;
-            console.log('#cartItem_' + selectedCartItemIndex)
-            document.getElementById('cartItem_' + selectedCartItemIndex).style.background = "#eeeeee"; // TODO : Make it work
+        $.fn.selectCartItem = function (index) { // Added by Ryan Hardie
+            console.log("IN SELECTCARTITEM")
+            if ($('#discount_view').is(":visible")) {
+                if (selectedDiscountApplicationItem === 0) {
+                    console.log(selectedCartItems);
+                    $("#discountPrice").val(subTotal);
+                } else if (selectedDiscountApplicationItem === 1) {
+                    if ($('#cartItem_' + index).css("background-color") == 'rgb(204, 204, 204)') {
+                        console.log("in log delete item")
+                        $('#cartItem_' + index).css("background-color", "");
+                        console.log("in selectedDiscountApplicationItem === 1")
+                        selectedCartItems = selectedCartItems.filter(function (value) {
+                            console.log(value)
+                            console.log(value != cart[index])
+                            return value != cart[index];
+                        });
+                        console.log(selectedCartItems);
+                    } else {
+                        console.log("in log add item")
+                        if (!selectedCartItems.find(item => item.id === cart[index].id)) {
+                            selectedCartItems.push(cart[index]);
+                        }
+                        selectedCartItems.forEach(function (item, i) {
+                            $('#cartItem_' + i).css("background-color", "#cccccc");
+                        });
+                        console.log(selectedCartItems);
+                    }
+                } else if (selectedDiscountApplicationItem === 2) {
+                    console.log("in log only one")
+                    cart.forEach(function (item, i) { // Added by Ryan Hardie
+                        $('#cartItem_' + i).css("background-color", "");
+                    });
+                    selectedCartItems = [];
+                    selectedCartItems.push(cart[index]);
+                    $('#cartItem_' + index).css("background-color", "#cccccc");
+                    console.log(selectedCartItems);
+                }
+            }
+            $(this).calculateDiscountedPrice();
 
-            console.log(document.getElementById('cartItem_' + selectedCartItemIndex))
-            $(this).renderTable(cart);
+            //$(this).renderTable(cart);
         }
 
 
@@ -705,6 +738,11 @@ if (auth == undefined) {
                 if ($('#shop').is(':visible')) {
                     $('#shop').hide();
                     $('#discount_view').show();
+                    cart.forEach(function (item, i) { // Added by Ryan Hardie
+                        selectedCartItems.push(item);
+                        $('#cartItem_' + i).css("background-color", "#cccccc");
+                    });
+                    $(this).calculateDiscountedPrice();
                 } else {
                     $('#shop').show();
                     $('#discount_view').hide();
@@ -717,6 +755,8 @@ if (auth == undefined) {
                     'warning'
                 );
             }
+            
+
 
         });
 
@@ -752,41 +792,88 @@ if (auth == undefined) {
         }
 
         $.fn.selectDiscountApplicationType = function (selection) {
+            selectedDiscountApplicationType = selection;
             switch (selection) {
-
                 case 1:
-                    selectedDiscountApplicationType = selection;
                     $("#discount_curr").text(settings.symbol);
                     break;
 
                 case 2:
-                    selectedDiscountApplicationType = selection;
                     $("#discountInput").val(subTotal);
                     //$(this).calculateCart()
                     break;
 
                 default:
-                    selectedDiscountApplicationType = selection;
                     $("#discount_curr").text('%');
 
             }
+            $(this).calculateDiscountedPrice();
+
         }
 
         $.fn.selectDiscountApplicationItem = function (selection) {
             switch (selection) {
-
                 case 1:
-                    selectedDiscountApplicationType = selection;
+                    if (selectedDiscountApplicationItem === 0) {
+                        console.log("in log case 1")
+                        cart.forEach(function (item, i) { // Added by Ryan Hardie
+                            $('#cartItem_' + i).css("background-color", "");
+                        });
+                        selectedCartItems = [];
+                        console.log(selectedCartItems)
+                    }
                     break;
-
-                case 2:
-                    selectedDiscountApplicationType = selection;
-                    break;
+                    
+                    case 2:
+                        console.log("in log case 2")
+                        cart.forEach(function (item, i) { // Added by Ryan Hardie
+                            $('#cartItem_' + i).css("background-color", "");
+                        });
+                        selectedCartItems = [];
+                        break;
 
                 default:
-                    selectedDiscountApplicationType = selection;
+                    selectedCartItems = [];
+                    cart.forEach(function (item, i) {
+                        selectedCartItems.push(item);
+                        $('#cartItem_' + i).css("background-color", "#cccccc");
+                    });
+                    console.log(selectedCartItems)
+                    
+                }
+                selectedDiscountApplicationItem = selection
+                $(this).calculateDiscountedPrice()
+                console.log("END OF SELECTION")
+        }
 
+        $.fn.calculateDiscountedPrice = function () {
+            let discountTotal = 0;
+
+            if (selectedDiscountApplicationType === 0) {
+                    selectedCartItems.forEach(function(item, index) {
+                        discountTotal += item.price * item.quantity * ($("#discountInput").val() / 100);
+                    });
+            } else if (selectedDiscountApplicationType === 1) {
+                if (selectedDiscountApplicationItem === 0) {
+                    // selectedCartItems.forEach(function(item, index) {
+                    //     discountTotal += item.price * item.quantity;
+                    // });
+                    console.log("discountTotal ")
+                    console.log(discountTotal)
+
+                    discountTotal = $("#discountInput").val();
+                } else {
+                    selectedCartItems.forEach(function(item, index) {
+                        discountTotal += $("#discountInput").val() * 1;
+                    });
+                }
+            } else if (selectedDiscountApplicationType === 2) {
+                cart.forEach(function(item, index) {
+                    discountTotal += item.price * item.quantity;
+                });
             }
+            console.log(discountTotal)
+            $('#discountPrice').val(subTotal - discountTotal);
         }
 
         const pad = { // Added by Ryan Hardie
@@ -795,7 +882,7 @@ if (auth == undefined) {
             "discount_pad": 2,
         }
 
-        $.fn.go = function (value,isDueInput) {
+        $.fn.go = function (value, isDueInput) {
             // if(isDueInput){
             //     $("#refNumber").val($("#refNumber").val()+""+value)
             // }else if (!isDueInput){
@@ -808,10 +895,10 @@ if (auth == undefined) {
             // }
             console.log("discount value")
             console.log(pad[isDueInput])
-    
+
             switch (pad[isDueInput]) {
                 case 1:
-                    $("#payment").val($("#payment").val()+""+value);
+                    $("#payment").val($("#payment").val() + "" + value);
                     $(this).calculateChange();
                     break;
                 case 2:
@@ -819,42 +906,48 @@ if (auth == undefined) {
                     console.log($('#discountInput').val())
                     console.log('price before')
                     console.log($('#price').val())
-                    $('#price').val(subTotal - $('#discountInput').val())
+                    //$('#discountPrice').val(subTotal - $('#discountInput').val())
+                    //$('#price').text(subTotal - $('#discountInput').val())
+                    
                     console.log('price after')
                     console.log($('#price').val())
+                    $(this).calculateDiscountedPrice();
                     break;
                 default:
-                    $("#refNumber").val($("#refNumber").val()+""+value);
-    
+                    $("#refNumber").val($("#refNumber").val() + "" + value);
+
             }
         }
-    
-    
-        $.fn.digits = function(isDueInput){
+
+
+        $.fn.digits = function (isDueInput) {
             switch (pad[isDueInput]) {
                 case 1:
-                    $("#payment").val($("#payment").val()+".");
+                    $("#payment").val($("#payment").val() + ".");
                     $(this).calculateChange();
                     break;
                 case 2:
                     $('#discountInput').val($('#discountInput').val() + ".");
+                    $('#discountPrice').val(subTotal - $('#discountInput').val())
+                    $(this).calculateDiscountedPrice()
+
                     break;
                 default:
-                    //$("#refNumber").val($("#refNumber").val()+""+value);
-    
+                //$("#refNumber").val($("#refNumber").val()+""+value);
+
             }
         }
-    
+
         $.fn.calculateChange = function () {
             var change = $("#payablePrice").val() - $("#payment").val();
-            if(change <= 0){
+            if (change <= 0) {
                 $("#change").text(change.toFixed(2));
-            }else{
+            } else {
                 $("#change").text('0')
             }
-            if(change <= 0){
+            if (change <= 0) {
                 $("#confirmPayment").show();
-            }else{
+            } else {
                 $("#confirmPayment").hide();
             }
         }
@@ -1094,7 +1187,7 @@ if (auth == undefined) {
             $("#refNumber").val('');
             $("#change").text('');
             $("#payment").val('');
-            
+
             //$("#discountInput").val(''); // Added by Ryan Hardie
 
 
@@ -1330,7 +1423,7 @@ if (auth == undefined) {
         $("#payment").on('input', function () {
             $(this).calculateChange();
         });
-        
+
         $("#discountInput").on('input', function () { // Added by Ryan Hardie
             $(this).calculateChange();
         });

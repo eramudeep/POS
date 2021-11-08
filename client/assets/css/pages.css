@@ -23,17 +23,6 @@
   background: #eeeeee;
 }
 
-/* .hover-table-element:focus {
-  background-color: #eeeeee;
-} */
-
-.discount-application-type:focus {
-  background-color: #5fbeaa;
-}
-
-.discount-application-item:focus {
-  background-color: #5fbeaa;
-}
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
