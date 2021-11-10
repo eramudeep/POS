@@ -1,4 +1,5 @@
 let cart = [];
+let cartToDisplay = []; // Added by Ryan Hardie
 let index = 0;
 let allUsers = [];
 let allProducts = [];
@@ -74,9 +75,10 @@ const taxes = { // Added by Ryan Hardie
 let selectedCartItems = new Array(); // Added by Ryan Hardie
 let selectedDiscountApplicationType = 0; // Added by Ryan Hardie
 let selectedDiscountApplicationItem = 0; // Added by Ryan Hardie
+let discountSubTotalInput = 0; // Added by Ryan Hardie
 
 $('#discount_view').hide(); // Added by Ryan Hardie
-$("#discount_curr").text('%'); // Added by Ryan Hardie
+$("#discount_curr").text('Remise en %'); // Added by Ryan Hardie
 
 $(function () {
 
@@ -434,20 +436,24 @@ if (auth == undefined) {
 
         $.fn.addProductToCart = function (data) {
             item = {
+                cartIndex: cart.length,
                 id: data._id,
                 product_name: data.name,
                 sku: data.sku,
                 price: data.price,
                 taxes: data.taxes,
-                quantity: 1
+                discount: 0,
+                quantity: 1 // TODO : Not needed anymore
             };
 
-            if ($(this).isExist(item)) {
-                $(this).qtIncrement(index);
-            } else {
-                cart.push(item);
-                $(this).renderTable(cart)
-            }
+            // if ($(this).isExist(item)) {
+            //     $(this).qtIncrement(index);
+            // } else {
+            //     cart.push(item);
+            //     $(this).renderTable(cart)
+            // }
+            cart.push(item);
+            $(this).renderTable(cart)
         }
 
 
@@ -468,7 +474,10 @@ if (auth == undefined) {
         }
 
 
-        $.fn.calculateCart = function () {
+        $.fn.calculateCart = function () { // TODO : Include discount
+            console.log("cart : ")
+            console.log(cart)
+
             let total = 0;
 
             let tva_5 = 0; // Added by Ryan Hardie
@@ -478,14 +487,14 @@ if (auth == undefined) {
             let grossTotal;
             $('#total').text(cart.length);
             $.each(cart, function (index, data) {
-                total += data.quantity * data.price;
+                total += (data.quantity * data.price) * (1 - (data.discount / 100));
                 console.log(data)
-                if (data.taxes == 2) tva_5 += data.quantity * (data.price * 0.05)
-                if (data.taxes == 3) tva_13 += data.quantity * (data.price * 0.13)
-                if (data.taxes == 4) tva_16 += data.quantity * (data.price * 0.16)
+                if (data.taxes == 2) tva_5 += ((data.quantity * data.price) * (1 - (data.discount / 100))) * 0.05;
+                if (data.taxes == 3) tva_13 += ((data.quantity * data.price) * (1 - (data.discount / 100))) * 0.13; // data.quantity * (data.price * 0.13)
+                if (data.taxes == 4) tva_16 += ((data.quantity * data.price) * (1 - (data.discount / 100))) * 0.16;
             });
 
-            total = total; // - $("#inputDiscount").val() >= 0 ? $("#inputDiscount").val() : 0;
+            //total = total; // - $("#inputDiscount").val() >= 0 ? $("#inputDiscount").val() : 0;
             $('#price').text(total.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
 
             //total = total - $("#inputDiscount").val();
@@ -499,8 +508,10 @@ if (auth == undefined) {
 
             // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
             $('#tva_16').text(tva_16.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
-
+            
             subTotal = total;
+
+            //subTotal = $(this).calculateDiscountedPrice();
 
             // if ($("#inputDiscount").val() > total) {
             //     $("#inputDiscount").val(0);
@@ -532,43 +543,44 @@ if (auth == undefined) {
             $.each(cartList, function (index, data) {
                 //console.log(data);
                 $('#cartTable > tbody').append(
-                    $('<div class="row hover-table-element" id="cartItem_' + index + '" tabindex="' + index + '" onclick="$(this).selectCartItem(' + index + ')">').append(
+                    $('<div class="row hover-table-element" id="cartItem_' + index + '" tabindex="' + index + '" onclick="$(this).selectCartItem(' + index + ')" style ="padding: 10px;">').append(
                         //$('<th>', { scope: "row", width: '0px' }),
                         $('<div>', { class: 'col-md-1', style: 'font-weight: bold;', scope: "row", text: index + 1 }),
-                        $('<div>', { class: 'col-md-3', text: data.product_name }),
-                        $('<div class="col-md-4" width="170px">').append(
-                            $('<div>', { class: 'input-group' }).append(
-                                $('<div>', { class: 'input-group-btn btn-xs' }).append(
-                                    $('<button>', {
-                                        class: 'btn btn-default btn-xs',
-                                        onclick: '$(this).qtDecrement(' + index + ')'
-                                    }).append(
-                                        $('<i>', { class: 'fa fa-minus' })
-                                    )
-                                ),
-                                $('<input>', {
-                                    class: 'form-control',
-                                    min: '1',
-                                    type: 'number',
-                                    value: data.quantity,
-                                    onInput: '$(this).qtInput(' + index + ')'
-                                }),
-                                $('<div>', { class: 'input-group-btn btn-xs' }).append(
-                                    $('<button>', {
-                                        class: 'btn btn-default btn-xs',
-                                        onclick: '$(this).qtIncrement(' + index + ')'
-                                    }).append(
-                                        $('<i>', { class: 'fa fa-plus' })
-                                    )
-                                )
-                            )
-                        ),
+                        $('<div>', { class: 'col-md-6', text: data.product_name }),
+                        $('<div>', { class: 'text-right col-md-2', text: (data.discount).toFixed(2) + ' %' }), // Added by Ryan Hardie
+                        // $('<div class="col-md-4" width="170px">').append(
+                        //     $('<div>', { class: 'input-group' }).append(
+                        //         $('<div>', { class: 'input-group-btn btn-xs' }).append(
+                        //             $('<button>', {
+                        //                 class: 'btn btn-default btn-xs',
+                        //                 onclick: '$(this).qtDecrement(' + index + ')'
+                        //             }).append(
+                        //                 $('<i>', { class: 'fa fa-minus' })
+                        //             )
+                        //         ),
+                        //         $('<input>', {
+                        //             class: 'form-control',
+                        //             min: '1',
+                        //             type: 'number',
+                        //             value: data.quantity,
+                        //             onInput: '$(this).qtInput(' + index + ')'
+                        //         }),
+                        //         $('<div>', { class: 'input-group-btn btn-xs' }).append(
+                        //             $('<button>', {
+                        //                 class: 'btn btn-default btn-xs',
+                        //                 onclick: '$(this).qtIncrement(' + index + ')'
+                        //             }).append(
+                        //                 $('<i>', { class: 'fa fa-plus' })
+                        //             )
+                        //         )
+                        //     )
+                        //),
                         //$('<th>', { text: taxes[data.taxes] }),
 
                         // $('<div class="text-right col-md-2">').append(
                         //     $('<input>', { class: 'form-control', type: 'number', id: 'itemDiscount', oninput: '$(this).calculateNewItemPrice(' + index +')' }) // TODO : Modify oninput fonction
                         // ),
-                        $('<div>', { class: 'text-right col-md-3', text: (data.price * data.quantity).toFixed(0) + ' ' + settings.symbol }),
+                        $('<div>', { class: 'text-right col-md-2', text: (data.price * data.quantity).toFixed(0) + ' ' + settings.symbol }),
                         $('<div class="text-right col-md-1">').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
@@ -599,12 +611,11 @@ if (auth == undefined) {
         // }
 
         $.fn.selectCartItem = function (index) { // Added by Ryan Hardie
-            console.log("IN SELECTCARTITEM")
             if ($('#discount_view').is(":visible")) {
                 if (selectedDiscountApplicationItem === 0) {
-                    console.log(selectedCartItems);
                     $("#discountPrice").val(subTotal);
                 } else if (selectedDiscountApplicationItem === 1) {
+                    console.log("in 1")
                     if ($('#cartItem_' + index).css("background-color") == 'rgb(204, 204, 204)') {
                         console.log("in log delete item")
                         $('#cartItem_' + index).css("background-color", "");
@@ -620,12 +631,15 @@ if (auth == undefined) {
                         if (!selectedCartItems.find(item => item.id === cart[index].id)) {
                             selectedCartItems.push(cart[index]);
                         }
+                        console.log("in 1 else")
                         selectedCartItems.forEach(function (item, i) {
-                            $('#cartItem_' + i).css("background-color", "#cccccc");
+                            //if (cart[])
+                            $('#cartItem_' + item.cartIndex).css("background-color", "#cccccc");
                         });
                         console.log(selectedCartItems);
                     }
                 } else if (selectedDiscountApplicationItem === 2) {
+                    console.log("in 2")
                     console.log("in log only one")
                     cart.forEach(function (item, i) { // Added by Ryan Hardie
                         $('#cartItem_' + i).css("background-color", "");
@@ -642,50 +656,55 @@ if (auth == undefined) {
         }
 
 
-        $.fn.qtIncrement = function (i) {
+        // $.fn.qtIncrement = function (i) {
 
-            item = cart[i];
+        //     item = cart[i];
 
-            let product = allProducts.filter(function (selected) {
-                return selected._id == parseInt(item.id);
-            });
+        //     let product = allProducts.filter(function (selected) {
+        //         return selected._id == parseInt(item.id);
+        //     });
 
-            if (product[0].stock == 1) {
-                if (item.quantity < product[0].quantity) {
-                    item.quantity += 1;
-                    $(this).renderTable(cart);
-                }
+        //     if (product[0].stock == 1) {
+        //         if (item.quantity < product[0].quantity) {
+        //             item.quantity += 1;
+        //             $(this).renderTable(cart);
+        //         }
 
-                else {
-                    Swal.fire(
-                        'No more stock!',
-                        'You have already added all the available stock.',
-                        'info'
-                    );
-                }
-            }
-            else {
-                item.quantity += 1;
-                $(this).renderTable(cart);
-            }
+        //         else {
+        //             Swal.fire(
+        //                 'No more stock!',
+        //                 'You have already added all the available stock.',
+        //                 'info'
+        //             );
+        //         }
+        //     }
+        //     else {
+        //         item.quantity += 1;
+        //         $(this).renderTable(cart);
+        //     }
 
-        }
-
-
-        $.fn.qtDecrement = function (i) {
-            if (item.quantity > 1) {
-                item = cart[i];
-                item.quantity -= 1;
-                $(this).renderTable(cart);
-            }
-        }
+        // }
 
 
-        $.fn.qtInput = function (i) {
-            item = cart[i];
-            item.quantity = $(this).val();
-            $(this).renderTable(cart);
-        }
+        // $.fn.qtDecrement = function (i) {
+        //     console.log("IN QUANTITY DECREMENT")
+        //     console.log('1 - item qty : ')
+        //     console.log(item.quantity)
+        //     if (item.quantity > 1) {
+        //         item = cart[i];
+        //         item.quantity -= 1;
+        //         console.log('2 - item qty : ')
+        //         console.log(item.quantity)
+        //         $(this).renderTable(cart);
+        //     }
+        // }
+
+
+        // $.fn.qtInput = function (i) {
+        //     item = cart[i];
+        //     item.quantity = $(this).val();
+        //     $(this).renderTable(cart);
+        // }
 
 
         $.fn.cancelOrder = function () {
@@ -733,7 +752,6 @@ if (auth == undefined) {
         });
 
         $("#discountButton").on('click', function () { // Added by Ryan Hardie
-            console.log($('#shop').is(':visible'))
             if (cart.length != 0) {
                 if ($('#shop').is(':visible')) {
                     $('#shop').hide();
@@ -755,10 +773,16 @@ if (auth == undefined) {
                     'warning'
                 );
             }
-            
-
-
         });
+
+
+        $("#cancelAllDiscounts").on('click', function () { // Added by Ryan Hardie
+            cart.forEach(function (item, i) { // Added by Ryan Hardie
+                item.discount = 0;
+            });
+        });
+
+
 
         $('#transactions').click(function () {
             loadTransactions();
@@ -795,7 +819,11 @@ if (auth == undefined) {
             selectedDiscountApplicationType = selection;
             switch (selection) {
                 case 1:
-                    $("#discount_curr").text(settings.symbol);
+                    if (selectedDiscountApplicationItem === 0) {
+                        $("#discount_curr").text('Nouveau Sous-total HT en ' + settings.symbol);
+                    } else {
+                        $("#discount_curr").text('Nouveau prix des articles en ' + settings.symbol);
+                    }
                     break;
 
                 case 2:
@@ -804,7 +832,7 @@ if (auth == undefined) {
                     break;
 
                 default:
-                    $("#discount_curr").text('%');
+                    $("#discount_curr").text('Remise en %');
 
             }
             $(this).calculateDiscountedPrice();
@@ -815,22 +843,19 @@ if (auth == undefined) {
             switch (selection) {
                 case 1:
                     if (selectedDiscountApplicationItem === 0) {
-                        console.log("in log case 1")
                         cart.forEach(function (item, i) { // Added by Ryan Hardie
                             $('#cartItem_' + i).css("background-color", "");
                         });
                         selectedCartItems = [];
-                        console.log(selectedCartItems)
                     }
                     break;
-                    
-                    case 2:
-                        console.log("in log case 2")
-                        cart.forEach(function (item, i) { // Added by Ryan Hardie
-                            $('#cartItem_' + i).css("background-color", "");
-                        });
-                        selectedCartItems = [];
-                        break;
+
+                case 2:
+                    cart.forEach(function (item, i) { // Added by Ryan Hardie
+                        $('#cartItem_' + i).css("background-color", "");
+                    });
+                    selectedCartItems = [];
+                    break;
 
                 default:
                     selectedCartItems = [];
@@ -838,42 +863,43 @@ if (auth == undefined) {
                         selectedCartItems.push(item);
                         $('#cartItem_' + i).css("background-color", "#cccccc");
                     });
-                    console.log(selectedCartItems)
-                    
-                }
-                selectedDiscountApplicationItem = selection
-                $(this).calculateDiscountedPrice()
-                console.log("END OF SELECTION")
+
+            }
+            selectedDiscountApplicationItem = selection
+            $(this).calculateDiscountedPrice()
         }
 
         $.fn.calculateDiscountedPrice = function () {
             let discountTotal = 0;
 
             if (selectedDiscountApplicationType === 0) {
-                    selectedCartItems.forEach(function(item, index) {
-                        discountTotal += item.price * item.quantity * ($("#discountInput").val() / 100);
-                    });
+                selectedCartItems.forEach(function (item, index) {
+                    item.discount = $("#discountInput").val();
+                    discountTotal += (item.price * item.quantity) * ($("#discountInput").val() / 100); // TODO : To delete
+                });
             } else if (selectedDiscountApplicationType === 1) {
                 if (selectedDiscountApplicationItem === 0) {
                     // selectedCartItems.forEach(function(item, index) {
                     //     discountTotal += item.price * item.quantity;
                     // });
-                    console.log("discountTotal ")
-                    console.log(discountTotal)
-
-                    discountTotal = $("#discountInput").val();
+                    discountSubTotalInput = $("#discountInput").val() * 100 / subTotal;
+                    discountTotal = Math.abs(subTotal - $("#discountInput").val()); // TODO : To delete
                 } else {
-                    selectedCartItems.forEach(function(item, index) {
-                        discountTotal += $("#discountInput").val() * 1;
+                    selectedCartItems.forEach(function (item, index) {
+                        item.discount = $("#discountInput").val() * 100 / item.price;
+                        discountTotal += $("#discountInput").val() * 1; // TODO : To delete
                     });
                 }
             } else if (selectedDiscountApplicationType === 2) {
-                cart.forEach(function(item, index) {
+                cart.forEach(function (item, index) {
                     discountTotal += item.price * item.quantity;
                 });
+                discountSubTotalInput = 100;
             }
-            console.log(discountTotal)
             $('#discountPrice').val(subTotal - discountTotal);
+            console.log(selectedCartItems);
+            console.log(discountSubTotalInput)
+            return subTotal - discountTotal;
         }
 
         const pad = { // Added by Ryan Hardie
@@ -893,8 +919,6 @@ if (auth == undefined) {
             //     console.log("discount value")
             //     console.log(value)
             // }
-            console.log("discount value")
-            console.log(pad[isDueInput])
 
             switch (pad[isDueInput]) {
                 case 1:
@@ -903,14 +927,9 @@ if (auth == undefined) {
                     break;
                 case 2:
                     $('#discountInput').val($('#discountInput').val() + value);
-                    console.log($('#discountInput').val())
-                    console.log('price before')
-                    console.log($('#price').val())
                     //$('#discountPrice').val(subTotal - $('#discountInput').val())
                     //$('#price').text(subTotal - $('#discountInput').val())
-                    
-                    console.log('price after')
-                    console.log($('#price').val())
+
                     $(this).calculateDiscountedPrice();
                     break;
                 default:
@@ -1442,6 +1461,24 @@ if (auth == undefined) {
             }
         });
 
+        $("#confirmDiscount").on('click', function () {
+            if ($('#discountInput').val() == "") {
+                Swal.fire(
+                    'Nope!',
+                    'Please enter the amount that was paid!',
+                    'warning'
+                );
+            }
+            else {
+                $(this).applyDiscount();
+            }
+        });
+
+        $.fn.applyDiscount = function () { // Added by Ryan Hardie
+            selectedCartItems.forEach(function (item) {
+                cart[item.cartIndex].discount = item.discount;
+            });
+        }
 
         $('#transactions').click(function () {
             loadTransactions();

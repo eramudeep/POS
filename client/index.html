@@ -279,20 +279,20 @@
 
                   <thead>
                     <!--</thead> style="display:table-header-group;">-->
-                    <div class="row">
+                    <div class="row" style ="padding-left: 10px; padding-right: 10px; padding-bottom: 10px;">
                       <div scope="col" class="col-md-1" style="font-weight: bold;">#</div>
-                      <div scope="col" class="col-md-3" style="font-weight: bold;">Item</div>
-                      <div scope="col" class="text-center col-md-4" style="font-weight: bold;">Qté</div>
+                      <div scope="col" class="col-md-6" style="font-weight: bold;">Item</div>
+                      <div scope="col" class="text-right col-md-2" style="font-weight: bold;">Remise</div>
                       <!--<th scope="col">TVA</th>-->
                       <!-- <div scope="col" class="text-right col-md-2" style="font-weight: bold;">Remise</div> -->
-                      <div scope="col" class="text-right col-md-3" style="font-weight: bold;">Prix HT</div>
+                      <div scope="col" class="text-right col-md-2" style="font-weight: bold;">Prix HT</div>
                       <div scope="col" class="text-right col-md-1" style="font-weight: bold;">
                         <button onclick="$(this).cancelOrder()" class="btn btn-danger btn-xs"><i
                             class="fa fa-times"></i></button>
                       </div>
                       </tr>
                   </thead>
-                  <hr style="border: 1px solid grey; margin-top: 10px; margin-bottom: 10px;" />
+                  <hr style="border: 1px solid grey; margin-top: 0px; margin-bottom: 0px;" />
                   <tbody style="max-width: 100%; overflow-x: hidden;">
                   </tbody>
                 </table>
@@ -444,6 +444,11 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div type="button" class="btn btn-danger btn-block btn-lg waves-effect waves-light" id="cancelAllDiscounts">Annuler toutes les remises</div>
+                </div>
+              </div>
               <br />
               <div class="col-md-12">
                 <div class="row">
@@ -454,7 +459,7 @@
                   </div>
                   <br>
                   <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon5">Remise <span id="discount_curr"></span> </span>
+                    <span class="input-group-addon" id="basic-addon5"><span id="discount_curr"></span> </span>
                     <input type="text" placeholder="0" class="form-control" id="discountInput"
                       aria-describedby="basic-addon5">
                   </div>
@@ -538,8 +543,7 @@
               <hr>
               <div class="row">
                 <div class="col-md-6">
-                  <div class="btn btn-primary btn-block btn-lg waves-effect waves-light">Change <span
-                      id="change_curr"></span><span id="change"></span> </div>
+                  <div type="button" class="btn btn-danger btn-block btn-lg waves-effect waves-light">Annuler</div>
                 </div>
                 <div class="col-md-6">
                   <button type="button" id="confirmDiscount"
