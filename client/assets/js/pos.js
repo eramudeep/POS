@@ -443,6 +443,7 @@ if (auth == undefined) {
                 price: data.price,
                 taxes: data.taxes,
                 discount: 0,
+                tempDiscount: 0,
                 quantity: 1 // TODO : Not needed anymore
             };
 
@@ -475,8 +476,6 @@ if (auth == undefined) {
 
 
         $.fn.calculateCart = function () { // TODO : Include discount
-            console.log("cart : ")
-            console.log(cart)
 
             let total = 0;
 
@@ -487,11 +486,11 @@ if (auth == undefined) {
             let grossTotal;
             $('#total').text(cart.length);
             $.each(cart, function (index, data) {
-                total += (data.quantity * data.price) * (1 - (data.discount / 100));
-                console.log(data)
-                if (data.taxes == 2) tva_5 += ((data.quantity * data.price) * (1 - (data.discount / 100))) * 0.05;
-                if (data.taxes == 3) tva_13 += ((data.quantity * data.price) * (1 - (data.discount / 100))) * 0.13; // data.quantity * (data.price * 0.13)
-                if (data.taxes == 4) tva_16 += ((data.quantity * data.price) * (1 - (data.discount / 100))) * 0.16;
+                dataDiscount = $('#discount_view').is(":visible") ? data.tempDiscount : data.discount;
+                total += (data.quantity * data.price) * (1 - (dataDiscount / 100));
+                if (data.taxes == 2) tva_5 += ((data.quantity * data.price) * (1 - (dataDiscount / 100))) * 0.05;
+                if (data.taxes == 3) tva_13 += ((data.quantity * data.price) * (1 - (dataDiscount / 100))) * 0.13; // data.quantity * (data.price * 0.13)
+                if (data.taxes == 4) tva_16 += ((data.quantity * data.price) * (1 - (dataDiscount / 100))) * 0.16;
             });
 
             //total = total; // - $("#inputDiscount").val() >= 0 ? $("#inputDiscount").val() : 0;
@@ -508,7 +507,9 @@ if (auth == undefined) {
 
             // total = total - $("#inputDiscount").val(); Keep for individual discounts per item
             $('#tva_16').text(tva_16.toFixed(0) + " " + settings.symbol); // modified by Ryan Hardie
-            
+
+            console.log("subTotal : ")
+            console.log(subTotal)
             subTotal = total;
 
             //subTotal = $(this).calculateDiscountedPrice();
@@ -541,13 +542,14 @@ if (auth == undefined) {
             $('#cartTable > tbody').empty();
             $(this).calculateCart();
             $.each(cartList, function (index, data) {
-                //console.log(data);
+                console.log("data : ")
+                console.log(data)
                 $('#cartTable > tbody').append(
                     $('<div class="row hover-table-element" id="cartItem_' + index + '" tabindex="' + index + '" onclick="$(this).selectCartItem(' + index + ')" style ="padding: 10px;">').append(
                         //$('<th>', { scope: "row", width: '0px' }),
                         $('<div>', { class: 'col-md-1', style: 'font-weight: bold;', scope: "row", text: index + 1 }),
                         $('<div>', { class: 'col-md-6', text: data.product_name }),
-                        $('<div>', { class: 'text-right col-md-2', text: (data.discount).toFixed(2) + ' %' }), // Added by Ryan Hardie
+                        $('<div>', { class: 'text-right col-md-2', text: $('#discount_view').is(":visible") ? (data.tempDiscount * 1).toFixed(2) + ' %' : (data.discount * 1).toFixed(2) + ' %' }), // Added by Ryan Hardie
                         // $('<div class="col-md-4" width="170px">').append(
                         //     $('<div>', { class: 'input-group' }).append(
                         //         $('<div>', { class: 'input-group-btn btn-xs' }).append(
@@ -580,7 +582,7 @@ if (auth == undefined) {
                         // $('<div class="text-right col-md-2">').append(
                         //     $('<input>', { class: 'form-control', type: 'number', id: 'itemDiscount', oninput: '$(this).calculateNewItemPrice(' + index +')' }) // TODO : Modify oninput fonction
                         // ),
-                        $('<div>', { class: 'text-right col-md-2', text: (data.price * data.quantity).toFixed(0) + ' ' + settings.symbol }),
+                        $('<div>', { class: 'text-right col-md-2', text: $('#discount_view').is(":visible") ? ((data.price * data.quantity * (1 - data.tempDiscount / 100)).toFixed(0) + ' ' + settings.symbol) : ((data.price * data.quantity * (1 - data.discount / 100)).toFixed(0) + ' ' + settings.symbol) }),
                         $('<div class="text-right col-md-1">').append(
                             $('<button>', {
                                 class: 'btn btn-danger btn-xs',
@@ -615,39 +617,27 @@ if (auth == undefined) {
                 if (selectedDiscountApplicationItem === 0) {
                     $("#discountPrice").val(subTotal);
                 } else if (selectedDiscountApplicationItem === 1) {
-                    console.log("in 1")
                     if ($('#cartItem_' + index).css("background-color") == 'rgb(204, 204, 204)') {
-                        console.log("in log delete item")
                         $('#cartItem_' + index).css("background-color", "");
-                        console.log("in selectedDiscountApplicationItem === 1")
                         selectedCartItems = selectedCartItems.filter(function (value) {
-                            console.log(value)
-                            console.log(value != cart[index])
                             return value != cart[index];
                         });
-                        console.log(selectedCartItems);
                     } else {
-                        console.log("in log add item")
                         if (!selectedCartItems.find(item => item.id === cart[index].id)) {
                             selectedCartItems.push(cart[index]);
                         }
-                        console.log("in 1 else")
                         selectedCartItems.forEach(function (item, i) {
                             //if (cart[])
                             $('#cartItem_' + item.cartIndex).css("background-color", "#cccccc");
                         });
-                        console.log(selectedCartItems);
                     }
                 } else if (selectedDiscountApplicationItem === 2) {
-                    console.log("in 2")
-                    console.log("in log only one")
                     cart.forEach(function (item, i) { // Added by Ryan Hardie
                         $('#cartItem_' + i).css("background-color", "");
                     });
                     selectedCartItems = [];
                     selectedCartItems.push(cart[index]);
                     $('#cartItem_' + index).css("background-color", "#cccccc");
-                    console.log(selectedCartItems);
                 }
             }
             $(this).calculateDiscountedPrice();
@@ -761,9 +751,11 @@ if (auth == undefined) {
                         $('#cartItem_' + i).css("background-color", "#cccccc");
                     });
                     $(this).calculateDiscountedPrice();
+                    $(this).renderTable(cart);
                 } else {
                     $('#shop').show();
                     $('#discount_view').hide();
+                    $(this).renderTable(cart);
                 }
                 //$("#discountModal").modal('toggle');
             } else {
@@ -874,8 +866,8 @@ if (auth == undefined) {
 
             if (selectedDiscountApplicationType === 0) {
                 selectedCartItems.forEach(function (item, index) {
-                    item.discount = $("#discountInput").val();
-                    discountTotal += (item.price * item.quantity) * ($("#discountInput").val() / 100); // TODO : To delete
+                    item.tempDiscount = ($("#discountInput").val() * 1).toFixed(2);
+                    discountTotal += (item.price * item.quantity) * (item.tempDiscount / 100); // TODO : To delete
                 });
             } else if (selectedDiscountApplicationType === 1) {
                 if (selectedDiscountApplicationItem === 0) {
@@ -886,7 +878,7 @@ if (auth == undefined) {
                     discountTotal = Math.abs(subTotal - $("#discountInput").val()); // TODO : To delete
                 } else {
                     selectedCartItems.forEach(function (item, index) {
-                        item.discount = $("#discountInput").val() * 100 / item.price;
+                        item.tempDiscount = $("#discountInput").val() * 100 / item.price;
                         discountTotal += $("#discountInput").val() * 1; // TODO : To delete
                     });
                 }
@@ -896,9 +888,15 @@ if (auth == undefined) {
                 });
                 discountSubTotalInput = 100;
             }
-            $('#discountPrice').val(subTotal - discountTotal);
+            console.log("selectedCartItems : ");
             console.log(selectedCartItems);
-            console.log(discountSubTotalInput)
+            console.log("cart : ");
+            console.log(cart);
+            console.log("discountTotal : ");
+            console.log(discountTotal);
+
+            $(this).renderTable(cart)
+            $('#discountPrice').val(subTotal);
             return subTotal - discountTotal;
         }
 
@@ -1476,7 +1474,8 @@ if (auth == undefined) {
 
         $.fn.applyDiscount = function () { // Added by Ryan Hardie
             selectedCartItems.forEach(function (item) {
-                cart[item.cartIndex].discount = item.discount;
+                cart[item.cartIndex].discount = item.tempDiscount;
+                item.tempDiscount = 0;
             });
         }
 
@@ -1525,13 +1524,9 @@ if (auth == undefined) {
 
             $(this).attr('action', api + 'inventory/product');
             $(this).attr('method', 'POST');
-            console.log("PRODUCT")
-            console.log($(this))
             $(this).ajaxSubmit({
                 contentType: 'application/json',
                 success: function (response) {
-                    console.log("RESPONSE")
-                    console.log(response)
                     $('#saveProduct').get(0).reset();
                     $('#current_img').text('');
 
