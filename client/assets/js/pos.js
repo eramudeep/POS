@@ -772,6 +772,30 @@ if (auth == undefined) {
             cart.forEach(function (item, i) { // Added by Ryan Hardie
                 item.discount = 0;
             });
+            selectedCartItems = [];
+            $(this).selectDiscountApplicationType(selectedDiscountApplicationType);
+            $(this).selectDiscountApplicationItem(selectedDiscountApplicationItem);
+            $(this).renderTable(cart);
+            console.log('CancelAllDiscounts :');
+            console.log(cart);
+
+        });
+        
+        
+        $("#cancelCurrentDiscounts").on('click', function () { // Added by Ryan Hardie
+            cart.forEach(function (item, i) { // Added by Ryan Hardie
+                item.tempDiscount = 0;
+            });
+            selectedCartItems = [];
+            
+            $('#shop').show();
+            $('#discount_view').hide();
+
+            $(this).renderTable(cart);
+            
+            console.log('CancelAllDiscounts :');
+            console.log(cart);
+
         });
 
 
@@ -1473,10 +1497,21 @@ if (auth == undefined) {
         });
 
         $.fn.applyDiscount = function () { // Added by Ryan Hardie
+            console.log('SELECTEDCARTITEMS : ')
+            console.log(selectedCartItems)
             selectedCartItems.forEach(function (item) {
+                console.log('item : ')
+                console.log(item)
+
                 cart[item.cartIndex].discount = item.tempDiscount;
                 item.tempDiscount = 0;
             });
+            selectedCartItems = [];
+            $('#shop').show();
+            $('#discount_view').hide();
+            
+            console.log('ApplyDiscount : ')
+            console.log(cart)
         }
 
         $('#transactions').click(function () {
