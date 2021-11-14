@@ -65,7 +65,7 @@ app.post( "/product", upload.single('imagename'), function ( req, res ) {
 
     let image = '';
     console.log("req: ")
-    console.log(req.file.originalname)
+    //console.log(req.file.originalname)
 
     if(req.body.img != "") {
         image = req.body.img;     
@@ -73,7 +73,7 @@ app.post( "/product", upload.single('imagename'), function ( req, res ) {
         console.log(image)   
     }
 
-    if(req.file) {
+    if(req.file && req.file.originalname) {
         image = req.file.originalname;  
         //console.log("filename: ")
         //console.log(image)
@@ -92,6 +92,8 @@ app.post( "/product", upload.single('imagename'), function ( req, res ) {
             image = '';
         }
     }
+
+    console.log(req.body)
     
     let Product = {
         _id: parseInt(req.body.id),
@@ -99,12 +101,14 @@ app.post( "/product", upload.single('imagename'), function ( req, res ) {
         code: req.body.code,
         category: req.body.category,
         supplier: req.body.supplier,
-        cost: req.body.cost,
-        price: req.body.price,
         taxes: req.body.taxes,
         quantity: req.body.quantity == "" ? 0 : req.body.quantity,
         ordered: req.body.ordered == "" ? 0 : req.body.ordered,
         minimum_inventory: req.body.minimum_inventory,
+        cost: req.body.cost,
+        HT_price: req.body.HT_price,
+        TTC_price: req.body.TTC_price,
+        margin: req.body.margin,
         stock_visibility: req.body.stock == "on" ? 0 : 1,    
         img: image        
     }

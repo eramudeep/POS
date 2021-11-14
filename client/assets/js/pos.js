@@ -240,13 +240,13 @@ if (auth == undefined) {
                     }
 
                     let item_info = `<div class="col-lg-2 box ${item.category}"
-                                onclick="$(this).addToCart(${item._id}, ${item.quantity}, ${item.stock})">
+                                onclick="$(this).addToCart(${item._id}, ${item.quantity}, ${item.stock_visibility})">
                             <div class="widget-panel widget-style-2 ">                    
                             <div id="image"><img src="${item.img == "" ? "./assets/images/default.jpg" : product_img_path + item.img}" id="product_img" alt=""></div>                    
                                         <div class="text-muted m-t-5 text-center">
                                         <div class="name" id="product_name">${item.name}</div> 
                                         <span class="sku">${item.sku}</span>
-                                        <span class="stock">STOCK </span><span class="count">${item.stock == 1 ? item.quantity : 'N/A'}</span></div>
+                                        <span class="stock">STOCK </span><span class="count">${item.stock_visibility == 1 ? item.quantity : 'N/A'}</span></div>
                                         <sp class="text-success text-center"><b data-plugin="counterup">${settings.symbol + item.price}</b> </sp>
                             </div>
                         </div>`;
@@ -1860,8 +1860,16 @@ if (auth == undefined) {
             }).prop("selected", true);
 
             $('#productName').val(allProducts[index].name);
-            $('#product_price').val(allProducts[index].price);
+            $('#productCode').val(allProducts[index].code);
+            $('#taxes').val(allProducts[index].taxes);
             $('#quantity').val(allProducts[index].quantity);
+            $('#ordered').val(allProducts[index].ordered);
+            $('#minimum_inventory').val(allProducts[index].minimum_inventory);
+
+            $('#product_cost').val(allProducts[index].cost);
+            $('#product_HT_price').val(allProducts[index].HT_price);
+            $('#product_TTC_price').val(allProducts[index].TTC_price);
+            $('#product_margin').val(allProducts[index].margin);
 
             $('#product_id').val(allProducts[index]._id);
             $('#img').val(allProducts[index].img);
@@ -1873,7 +1881,7 @@ if (auth == undefined) {
                 $('#rmv_img').show();
             }
 
-            if (allProducts[index].stock == 0) {
+            if (allProducts[index].stock_visibility == 0) {
                 $('#stock').prop("checked", true);
             }
 
@@ -2187,7 +2195,7 @@ if (auth == undefined) {
             <td><img style="max-height: 500px; max-width: 100px;" src="${product.img == "" ? "./assets/images/default.jpg" : product_img_path + product.img}" id="product_img"></td>
             <td>${product.name}</td>
             <td>${settings.symbol}${product.price}</td>
-            <td>${product.stock == 1 ? product.quantity : 'N/A'}</td>
+            <td>${product.stock_visibility == 1 ? product.quantity : 'N/A'}</td>
             <td>${category.length > 0 ? category[0].name : ''}</td>
             <td>${supplier.length > 0 ? supplier[0].name : ''}</td>
             <td class="nobr"><span class="btn-group"><button onClick="$(this).editProduct(${index})" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button><button onClick="$(this).deleteProduct(${product._id})" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button></span></td></tr>`;
@@ -2800,7 +2808,7 @@ function loadSoldProducts() {
         sold_list += `<tr>
             <td>${item.product}</td>
             <td>${item.qty}</td>
-            <td>${product[0].stock == 1 ? product.length > 0 ? product[0].quantity : '' : 'N/A'}</td>
+            <td>${product[0].stock_visibility == 1 ? product.length > 0 ? product[0].quantity : '' : 'N/A'}</td>
             <td>${settings.symbol + (item.qty * parseFloat(item.price)).toFixed(2)}</td>
             </tr>`;
 
