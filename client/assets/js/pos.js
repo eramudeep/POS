@@ -618,61 +618,114 @@ if (auth == undefined) {
         $.fn.selectCartItem = function (index) { // Added by Ryan Hardie
             if ($('#discount_view').is(":visible")) {
                 console.log("in selectCartItem : ")
-                //console.log($('#cartItem_0').css("background-color"))
-                //$('#cartItem_0').css("background-color", "#cccccc");
-                if (selectedDiscountApplicationItem === 0) {
-                    $("#discountPrice").val(subTotal);
-                } else if (selectedDiscountApplicationItem === 1) {
-                    //let selectedItem = {};
-                    if (selectedItem = selectedCartItems.find(item => item === cart[index])) {
-                        //$('#cartItem_' + selectedItem.cartIndex).css("background-color", "");
-                        selectedItem.selected = false;
-                        console.log("unselect :")
-                        //console.log($('#cartItem_' + index).css("background-color"))
-                        
-                        selectedItem.tempDiscount = 0;
-                        $(this).renderTable(cart);
-                        selectedCartItems = selectedCartItems.filter(function (value) {
-                            return value != cart[index];
+                if (selectedDiscountApplicationType === 0) { // Apply a %
+                    if (selectedDiscountApplicationItem === 0) { // on all items
+                        $("#discountPrice").val(subTotal);
+                    } else if (selectedDiscountApplicationItem === 1) { // on some items
+                        if (selectedItem = selectedCartItems.find(item => item === cart[index])) { // if the item is already selected
+                            selectedItem.selected = false;
+                            console.log("unselect :")
+    
+                            selectedItem.tempDiscount = 0;
+                            //$(this).renderTable(cart);
+                            selectedCartItems = selectedCartItems.filter(function (value) {
+                                return value != cart[index];
+                            });
+                        } else {
+                            selectedCartItems.push(cart[index]);
+    
+                            selectedCartItems.forEach(function (item, i) {
+                                item.selected = true;
+                            });
+                            //$(this).renderTable(cart);
+                        }
+                    } else if (selectedDiscountApplicationItem === 2) { // on one item
+                        cart.forEach(function (item, i) { // Added by Ryan Hardie
+                            item.selected = false;
+                            item.tempDiscount = 0;
                         });
-                    } else {
+                        selectedCartItems = [];
                         selectedCartItems.push(cart[index]);
-
-                        selectedCartItems.forEach(function (item, i) {
-                            //if (cart[])
-                            item.selected = true;
-                            //console.log(item.cartIndex)
-                            //console.log("select before :")
-                            //console.log($('#cartItem_' + item.cartIndex).css("background-color"))
-                            
-                            //$('#cartItem_' + item.cartIndex).css("background-color", "#cccccc");
-                            
-                            //window.document.getElementById("cartItem_" + item.cartIndex).backgroundColor = "rgb(238, 238, 238)";;
-                            //console.log("select after :")
-                            //console.log($('#cartItem_' + item.cartIndex).css("background-color"))
-                        });
-                        $(this).renderTable(cart);
+    
+                        cart[index].selected = true;
+                        //$(this).renderTable(cart);
+    
                     }
-                } else if (selectedDiscountApplicationItem === 2) {
-                    cart.forEach(function (item, i) { // Added by Ryan Hardie
-                        item.selected = false;
-                        item.tempDiscount = 0;
-                        console.log("selectCartItem selectedDiscountApplicationItem === 2 :")
-                        $('#cartItem_' + i).css("background-color", "");
-                    });
-                    selectedCartItems = [];
-                    selectedCartItems.push(cart[index]);
 
-                    cart[index].selected = true;
-                    $(this).renderTable(cart);
-
-                    //$('#cartItem_' + index).css("background-color", "#cccccc");
-
+                } else if (selectedDiscountApplicationType === 1) { // Modify price
+                    if (selectedDiscountApplicationItem === 0) { // on all items
+                        cart.forEach(function (item, i) {
+                            item.tempDiscount = $('#discountInput').val() / (item.price * item.quantity);
+                        })
+                        //$(this).renderTable(cart);
+                    } else if (selectedDiscountApplicationItem === 1) {
+                        if (selectedItem = selectedCartItems.find(item => item === cart[index])) {
+                            selectedItem.selected = false;
+    
+                            selectedItem.tempDiscount = $('#discountInput').val() / (selectedItem.price * selectedItem.quantity);
+                            //$(this).renderTable(cart);
+                            selectedCartItems = selectedCartItems.filter(function (value) {
+                                return value != cart[index];
+                            });
+                        } else {
+                            selectedCartItems.push(cart[index]);
+    
+                            selectedCartItems.forEach(function (item, i) {
+                                item.selected = true;
+                            });
+                            //$(this).renderTable(cart);
+                        }
+                    } else if (selectedDiscountApplicationItem === 2) {
+                        cart.forEach(function (item, i) { // Added by Ryan Hardie
+                            item.selected = false;
+                            item.tempDiscount = 0;
+                        });
+                        selectedCartItems = [];
+                        selectedCartItems.push(cart[index]);
+    
+                        cart[index].selected = true;
+                        //$(this).renderTable(cart);
+                    }
+                } else { // Offer
+                    if (selectedDiscountApplicationItem === 0) { // on all items
+                        cart.forEach(function (item, i) {
+                            item.tempDiscount = 100;
+                        })
+                        //$(this).renderTable(cart);
+                    } else if (selectedDiscountApplicationItem === 1) {
+                        if (selectedItem = selectedCartItems.find(item => item === cart[index])) {
+                            selectedItem.selected = false;
+    
+                            selectedItem.tempDiscount = 100;
+                            //$(this).renderTable(cart);
+                            selectedCartItems = selectedCartItems.filter(function (value) {
+                                return value != cart[index];
+                            });
+                        } else {
+                            selectedCartItems.push(cart[index]);
+    
+                            selectedCartItems.forEach(function (item, i) {
+                                item.selected = true;
+                            });
+                            //$(this).renderTable(cart);
+                        }
+                    } else if (selectedDiscountApplicationItem === 2) {
+                        cart.forEach(function (item, i) { // Added by Ryan Hardie
+                            item.selected = false;
+                            item.tempDiscount = 0;
+                        });
+                        selectedCartItems = [];
+                        selectedCartItems.push(cart[index]);
+                        
+                        cart[index].selected = true;
+                        cart[index].tempDiscount = 100;
+                        //$(this).renderTable(cart);
+                    }
                 }
             }
+            $(this).renderTable(cart);
             $(this).calculateDiscountedPrice();
 
-            //$(this).renderTable(cart);
         }
 
 
@@ -786,7 +839,7 @@ if (auth == undefined) {
                     $('#apply-percentage').addClass('active');
                     $('#apply-amount').removeClass('active');
                     $('#apply-offer').removeClass('active');
-                    
+
                     $('#apply-on-all').addClass('active');
                     $('#apply-on-some').removeClass('active');
                     $('#apply-on-one').removeClass('active');
@@ -822,19 +875,13 @@ if (auth == undefined) {
                     item.discount = 0;
                 }
             });
-            
             $('#discountInput').val(0);
             
-            // selectedCartItems = [];
-            // $('#shop').show();
-            // $('#discount_view').hide();
-            $(this).calculateDiscountedPrice();
-            //$(this).renderTable(cart);
-            // $(this).selectDiscountApplicationType(selectedDiscountApplicationType);
-            // $(this).selectDiscountApplicationItem(selectedDiscountApplicationItem);
-            // $(this).renderTable(cart);
-            // console.log('CancelAllDiscounts :');
-            // console.log(cart);
+            if (selectedDiscountApplicationType === 2) {
+                $(this).renderTable(cart);
+            } else {
+                $(this).calculateDiscountedPrice();
+            }
 
         });
 
@@ -895,25 +942,63 @@ if (auth == undefined) {
             selectedDiscountApplicationType = selection;
             switch (selection) {
                 case 1:
+                    $("#discountInput").prop("readonly", false);
+                    $('#discount_num_pad').css('pointer-events', '');
+                    if (selectedDiscountApplicationType === 2) $("#discountInput").val("");
                     if (selectedDiscountApplicationItem === 0) {
                         $("#discount_curr").text('Nouveau Sous-total HT en ' + settings.symbol);
                     } else {
                         $("#discount_curr").text('Nouveau prix des articles en ' + settings.symbol);
                     }
+                    if (selectedDiscountApplicationItem === 2){
+                        selectedCartItems.forEach(function (item, i) {
+                            item.selected = false;
+                            item.tempDiscount = 0;
+                        });
+                    }
+                    $(this).selectDiscountApplicationItem(selectedDiscountApplicationItem);
                     break;
 
                 case 2:
-                    $("#discountInput").val(subTotal);
-                    //$(this).calculateCart()
+                    $("#discount_curr").text('Remise en F');
+                    $("#discountInput").val(0);
+                    $("#discountInput").prop("readonly", true);
+                    $('#discount_num_pad').css('pointer-events', 'none');
+                    selectedCartItems = [];
+                    cart.forEach(function (item, i) {
+                        selectedCartItems.push(item);
+                        item.selected = true;
+                        item.tempDiscount = 0;
+                        //$('#cartItem_' + i).css("backgroundColor", "#cccccc");
+                    });
+
+                    $('#apply-percentage').removeClass('active');
+                    $('#apply-amount').removeClass('active');
+                    $('#apply-offer').addClass('active');
+
+                    $('#apply-on-all').addClass('active');
+                    $('#apply-on-some').removeClass('active');
+                    $('#apply-on-one').removeClass('active');
                     break;
 
                 default:
+                    $("#discountInput").prop("readonly", false);
+                    $('#discount_num_pad').css('pointer-events', '');
+                    if (selectedDiscountApplicationType === 2) $("#discountInput").val("");
                     $("#discount_curr").text('Remise en %');
+                    if (selectedDiscountApplicationItem === 2){
+                        selectedCartItems.forEach(function (item, i) {
+                            item.selected = false;
+                            item.tempDiscount = 0;
+                        });
+                    }
+                    $(this).selectDiscountApplicationItem(selectedDiscountApplicationItem);
 
 
             }
             $(this).calculateDiscountedPrice();
-
+            console.log("selectedDiscountApplicationType")
+            console.log(selectedDiscountApplicationType)
         }
 
         $.fn.selectDiscountApplicationItem = function (selection) {
@@ -938,7 +1023,6 @@ if (auth == undefined) {
                     cart.forEach(function (item, i) { // Added by Ryan Hardie
                         item.selected = false;
                         item.tempDiscount = 0;
-                        //$('#cartItem_' + i).css("background-color", "");
                     });
                     selectedCartItems = [];
                     break;
@@ -957,6 +1041,8 @@ if (auth == undefined) {
             }
             selectedDiscountApplicationItem = selection;
             $(this).calculateDiscountedPrice();
+            console.log("selectedDiscountApplicationItem")
+            console.log(selectedDiscountApplicationItem)
         }
 
         $.fn.calculateDiscountedPrice = function () {
@@ -965,41 +1051,29 @@ if (auth == undefined) {
             if (selectedDiscountApplicationType === 0) {
                 selectedCartItems.forEach(function (item, index) {
                     item.tempDiscount = ($("#discountInput").val() * 1).toFixed(2);
-                    discountTotal += (item.price * item.quantity) * (item.tempDiscount / 100); // TODO : To delete
+                    //discountTotal += (item.price * item.quantity) * (item.tempDiscount / 100); // TODO : To delete
                 });
                 //console.log("calculateDiscountPrice Type 0 GOOD")
             } else if (selectedDiscountApplicationType === 1) {
                 if (selectedDiscountApplicationItem === 0) {
-                    // selectedCartItems.forEach(function(item, index) {
-                        //     discountTotal += item.price * item.quantity;
-                        // });
-                        discountSubTotalInput = $("#discountInput").val() * 100 / subTotal;
-                        discountTotal = Math.abs(subTotal - $("#discountInput").val()); // TODO : To delete
-                        //console.log("calculateDiscountPrice Type 1 item 0 GOOD")
-                    } else {
-                        selectedCartItems.forEach(function (item, index) {
-                            item.tempDiscount = $("#discountInput").val() * 100 / item.price;
-                            discountTotal += $("#discountInput").val() * 1; // TODO : To delete
-                        });
-                        //console.log("calculateDiscountPrice Type 1 item 1 GOOD")
-                    }
-                } else if (selectedDiscountApplicationType === 2) {
-                    cart.forEach(function (item, index) {
-                        discountTotal += item.price * item.quantity;
+                    selectedCartItems.forEach(function(item, index) {
+                        discountTotal += (item.price * item.quantity);
                     });
-                    discountSubTotalInput = 100;
-                    //console.log("calculateDiscountPrice Type 2 GOOD")
+                    selectedCartItems.forEach(function(item, index) {
+                        item.tempDiscount = (1 - ($("#discountInput").val() / (discountTotal))) * 100;
+                    });
+                } else {
+                    selectedCartItems.forEach(function (item, index) {
+                        item.tempDiscount = (1 - ($("#discountInput").val() / (item.price * item.quantity))) * 100;
+                    });
+                }
+            } else if (selectedDiscountApplicationType === 2) {
+                selectedCartItems.forEach(function (item, index) {
+                    item.tempDiscount = 100;
+                });
             }
-            // console.log("selectedCartItems : ");
-            // console.log(selectedCartItems);
-            // console.log("cart : ");
-            // console.log(cart);
-            // console.log("discountTotal : ");
-            // console.log(discountTotal);
-
             $(this).renderTable(cart)
             $('#discountPrice').val(subTotal.toFixed(0));
-            return subTotal - discountTotal;
         }
 
         const pad = { // Added by Ryan Hardie
